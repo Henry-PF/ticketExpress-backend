@@ -1,0 +1,39 @@
+{
+  "dialectOptions": {
+    "ssl": {
+      "require": true
+    }
+  },
+  "options": {
+    "type": "js",
+    "dir": "models"
+  },
+  "password": "CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ",
+  "directory": "models",
+  "additional": {"ssl": {"require": true}},
+  "dialect": "postgresql",
+  "port": 5432,
+  "host": "dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com",
+  "database": "ticket_tsrw",
+  "storage": "undefined",
+  "tables": null,
+  "skipTables": null,
+  "skipFields": null,
+  "pkSuffixes": null,
+  "schema": "public",
+  "lang": "es5",
+  "caseModel": "o",
+  "caseFile": "o",
+  "caseProp": "o",
+  "noAlias": true,
+  "noInitModels": false,
+  "noWrite": false,
+  "views": false,
+  "singularize": false,
+  "username": "db_user",
+  "useDefine": false,
+  "indentation": 2,
+  "noIndexes": false
+}
+
+  
