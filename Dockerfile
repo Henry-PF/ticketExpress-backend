@@ -3,7 +3,6 @@ FROM node:16.18.0
 WORKDIR /usr/src/app/backend
 
 COPY package.json ./
-COPY package-lock.json ./
 
 RUN npm install
 
