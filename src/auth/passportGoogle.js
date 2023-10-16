@@ -1,6 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
+/*
 const GOOGLE_CALLBACK_URL = ''
 
 passport.use(
@@ -40,5 +40,5 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser(async (id, done) => {
     done(null, done);
 });
-
+*/
 module.exports = passport;
