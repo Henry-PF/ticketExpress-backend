@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const {findAll,findId,Userdelete,findCorreo} = require("../handlers/UsersHandler");
-const validateToken = require("../middlewares/validateToken")
+const {validateToken} = require("../middlewares/validateToken")
 
 router.post("/getUserCorreo",validateToken,findCorreo);
 router.get("/getAll", validateToken,findAll);
