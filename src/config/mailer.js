@@ -5,15 +5,15 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: process.env.GOOGLE_MAIL,
-        pass: process.env.GOOGLE_MAIL_PASS
+        user: "ticketexpress2000@gmail.com",
+        pass: "TicketExpress2000"
     }
 });
 
 const sendEmail = async (to, subject, text, html) => {
     try {
         const info = {
-            from: '"SmartPay" <pf.henry.wallet@gmail.com>',
+            from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
             to,
             subject,
             text,
