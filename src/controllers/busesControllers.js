@@ -1,15 +1,19 @@
-const { ciudades, provincias } = require("../db");
-const { Op } = require("sequelize");
+const { buses, statud } = require('../db')
+const { Op } = require('sequelize');
 
 exports.create = async (data) => {
-    let dataProvince = data.body;
+    let dataBus = data.body;
 
     try {
-        const newProvince = await provincias.create({
-            id: dataProvince.id,
-            nombre: dataProvince.nombre,
+        const newBus = await buses.create({
+            id: dataBus.id,
+            modelo: dataBus.modelo,
+            marca: dataBus.marca,
+            placa: dataBus.placa,
+            capacidad: dataBus.capacidad,
+            id_statud: dataBus.id_statud
         });
-        return newProvince;
+        return newBus;
     } catch (error) {
         console.log(error);
     }
@@ -17,20 +21,24 @@ exports.create = async (data) => {
 
 exports.update = async (data) => {
     try {
-        const province = await provincias.findOne({
+        const bus = await buses.findOne({
             where: {
                 id: data.id
             }
         });
 
-        if (province) {
-            await province.update({
-                nombre: data.nombre,
-
+        if (bus) {
+            await bus.update({
+                modelo: data.modelo,
+                marca: data.marca,
+                placa: data.placa,
+                capacidad: data.capacidad,
+                id_statud: data.id_statud
             });
-            return { message: "Provincia actualizada con éxito" };
+
+            return { message: "Autobús actualizado con éxito" };
         } else {
-            return { error: "No se encontró la Provincia" };
+            return { error: "No se encontró el autobús" };
         }
     } catch (error) {
         console.log(error);
@@ -41,7 +49,9 @@ exports.update = async (data) => {
 exports.getAll = async () => {
     let result = {};
     try {
-        const data = await provincias.findAll();
+        const data = await buses.findAll({
+            include: [{ model: statud, as: 'statud' }]
+        });
         result.data = data;
 
     } catch (error) {
@@ -51,33 +61,29 @@ exports.getAll = async () => {
     return result;
 }
 
-exports.getOne = async (req, res) => { }
-
-exports.deleteProvince = async (id) => {
-    console.log('id', id);
+exports.deleteBus = async (id) => {
     let result = {};
     try {
-        let province = await provincias.findOne({
+        let bus = await buses.findOne({
             where: {
                 id: {
                     [Op.eq]: id
                 }
             }
         });
-
-        if (province) {
-            console.log('Province', province);
-            await provincias.destroy({
+        if (bus) {
+            let updatedBus = await buses.update({ isactivo: false }, {
                 where: {
                     id: {
                         [Op.eq]: id
                     }
                 }
             });
-
-            result.data = {
-                message: "Provincia eliminada con exito"
-            };
+            if (updatedBus) {
+                result.data = {
+                    message: "Bus eliminado con exito"
+                };
+            }
         }
     } catch (error) {
         console.log(error)
@@ -89,7 +95,8 @@ exports.deleteProvince = async (id) => {
 exports.getId = async (id) => {
     let result = {};
     try {
-        const data = await provincias.findOne({
+        const data = await buses.findOne({
+            include: [{ model: statud, as: 'statud' }],
             where: {
                 id: {
                     [Op.eq]: id
@@ -97,6 +104,8 @@ exports.getId = async (id) => {
             }
         })
         return result.data = data;
+
+
     } catch (error) {
         console.log(error)
         result.error = error.message;

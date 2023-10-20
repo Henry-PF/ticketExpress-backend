@@ -1,12 +1,12 @@
-const {usuarios,datos,statud} = require("../db");
+const { usuarios, datos, statud } = require("../db");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
 
 
-exports.create =async (data)=>{
-    let result   = {};
+exports.create = async (data) => {
+    let result = {};
     let dataUser = data.body;
     try {
         if (dataUser.data) {
@@ -24,10 +24,10 @@ exports.create =async (data)=>{
                 return hash;
             })
             let dtaUsuario = {
-                nick:dta.nick,
-                password:hashF,
-                id_statud:"1",
-                type:"usuario"
+                nick: dta.nick,
+                password: hashF,
+                id_statud: "1",
+                type: "usuario"
             }
             //Verficacion si los datos de la persona ya existe
             const personaExiste = await datos.findOne({ where: { correo: { [Op.eq]: dtaPersona.correo } } })
@@ -40,8 +40,9 @@ exports.create =async (data)=>{
             }
             //Crear usuario
             user = await usuarios.create(dtaUsuario);
+
             if (user) {
-                result.data    = user;
+                result.data = user;
                 result.message = "Usuario registrado con éxito";
                 await sendEmail(
                     dtaPersona.correo_electronico,
@@ -63,12 +64,13 @@ exports.create =async (data)=>{
             } else {
                 throw new Error("Error al intentar registrar el usuario");
             }
+
         } else {
             throw new Error("Error faltan datos para proceder con el registro");
         }
     } catch (error) {
         console.log(error.message);
-        result.error=error.message;
+        result.error = error.message;
     }
     console.log(result);
     return result;
@@ -198,26 +200,26 @@ exports.Delete = async (id) => {
     return result;
 }
 
-exports.findEmail =async (data)=>{
-    let result={};
+exports.findEmail = async (data) => {
+    let result = {};
     try {
-        if(data.email){
-            let dataUser = await datos.findOne({ 
-                where: { 
-                    correo_electronico: { 
-                        [Op.eq]: data.email 
-                    } 
+        if (data.email) {
+            let dataUser = await datos.findOne({
+                where: {
+                    correo_electronico: {
+                        [Op.eq]: data.email
+                    }
                 },
-                includes:[{model:usuarios}]
+                includes: [{ model: usuarios }]
             })
             if (dataUser) {
-               result.data = dataUser;
-            }else{
+                result.data = dataUser;
+            } else {
                 result.error = {
                     message: "usuario no encontrado"
                 };
             }
-        }else{
+        } else {
             result.error = {
                 message: "falta el campo email"
             };
