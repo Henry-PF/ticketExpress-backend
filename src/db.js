@@ -47,11 +47,19 @@ fs.readdirSync(path.join(__dirname, "/models"))
   .forEach((file) => {
     db.push(require(path.join(__dirname, "/models", file)));
   });
-// Injectamos la conexion (sequelize) a todos los modelos
-db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
+// db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
 
-sequelize.models = initModels.initModels(sequelize);
+// sequelize.models = initModels.initModels(sequelize);
+// module.exports = {
+//   ...sequelize.models,
+//   conn: sequelize,
+// };
+
+// Inicializa los modelos utilizando la función initModels
+const models = initModels(sequelize);
+console.log(models, 'MODELSSSSSS')
+
 module.exports = {
-  ...sequelize.models,
+  ...models,
   conn: sequelize,
 };

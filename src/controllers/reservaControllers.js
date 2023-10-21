@@ -1,15 +1,18 @@
-const { Reserva } = require("../models/reserva"); 
+const Reserva = require('../db.js').reserva
+
+
 
 const crearReserva = async (req, res) => {
   try {
-   
-    const nuevaReserva = await Reserva.create(req.body);
-    res.status(201).json(nuevaReserva); 
+    const { origen, destino, partida, regreso, precio, viajeIda, cantidadPasajeros } = req.body; 
+    const nuevaReserva = await Reserva.create({ origen, destino, partida, regreso, precio, viajeIda, cantidadPasajeros }); 
+    res.status(201).json(nuevaReserva);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Hubo un error al crear la reserva" });
   }
 }
+
 
 
 const reservaXid = async (req, res) => {

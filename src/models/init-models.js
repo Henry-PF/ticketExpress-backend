@@ -16,7 +16,9 @@ var _servicios = require("./servicios");
 var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
+var _reserva = require("./reserva");//trae el modelo
 
+//devuelve un objeto con los mdoelos inicializados y las relax
 function initModels(sequelize) {
   var boletos = _boletos(sequelize, DataTypes);
   var buses = _buses(sequelize, DataTypes);
@@ -35,6 +37,8 @@ function initModels(sequelize) {
   var statud = _statud(sequelize, DataTypes);
   var terminales = _terminales(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
+  var reserva = _reserva(sequelize, DataTypes); 
+
 
   buses.belongsToMany(empresas, {  through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
   buses.belongsToMany(rutas, {through: buses_rutas, foreignKey: "id_bus", otherKey: "id_ruta" });
@@ -98,6 +102,8 @@ function initModels(sequelize) {
   terminales.hasMany(rutas, { foreignKey: "destino"});
   rutas.belongsTo(terminales, { foreignKey: "origen"});
   terminales.hasMany(rutas, { foreignKey: "origen"});
+  usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
+reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
 
   return {
     boletos,
@@ -117,8 +123,12 @@ function initModels(sequelize) {
     statud,
     terminales,
     usuarios,
+    reserva
   };
 }
+
+// console.log(reserva, _reserva)
+
 module.exports = initModels;
 module.exports.initModels = initModels;
 module.exports.default = initModels;

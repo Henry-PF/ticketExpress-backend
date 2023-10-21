@@ -14,8 +14,6 @@ router.post("/", handleCrearReserva);
 router.get("/:id", handleReservaId); 
 router.get("/", handleReservas);
 router.put("/:id", handleActualizacionReserva);
-
-// ELIMINAR RESERVA POR ID
 router.delete("/:id", handleEliminarReserva);
 
 module.exports = router;
