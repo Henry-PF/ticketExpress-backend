@@ -1,7 +1,7 @@
 const {update, findAll, FindID, Delete ,findEmail} = require("../controllers/usersControllers");
 
 
-
+//no seria upDate en vez de UserUpdate?
 exports.UserUpdate = async (req, res) => {
     let result = {};
     try {

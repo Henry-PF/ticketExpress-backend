@@ -5,13 +5,16 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const passport = require("passport");
+const reservasRoutes = require("./routes/reservaRoute.js");
 
 const fileupload = require("express-fileupload");
 
 require("./db.js");
 require('./auth/google.js');
 
+
 const server = express();
+
 
 server.name = "API";
 
@@ -51,6 +54,8 @@ server.use((req, res, next) => {
 });
 
 server.use("/", routes);
+server.use("/reservas", reservasRoutes);
+
 
 server.use((err, req, res, next) => {
   const status = err.status || 500;
