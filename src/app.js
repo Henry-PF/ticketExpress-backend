@@ -9,11 +9,12 @@ const passport = require("passport");
 const fileupload = require("express-fileupload");
 
 require("./db.js");
-require('./auth/passportGoogle.js');
+require('./auth/google.js');
 
 const server = express();
 
 server.name = "API";
+
 
 server.use(
   session({
