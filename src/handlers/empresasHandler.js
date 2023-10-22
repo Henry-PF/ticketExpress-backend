@@ -1,6 +1,6 @@
-const { create, getAll, deleteTerminal, getId, update, getOne } = require('../controllers/terminalesControllers');
+const { create, getAll, deleteEmpresa, getId, update } = require('../controllers/empresasControllers');
 
-exports.createTerminal = async (req, res) => {
+exports.createEmpresa = async (req, res) => {
     let result = {};
     try {
         result = await create(req.body);
@@ -10,7 +10,7 @@ exports.createTerminal = async (req, res) => {
     } catch (error) {
         console.log(error.message);
 
-        return res.status(500).json({ error: { message: "Error al crear la terminal" } });
+        return res.status(500).json({ error: { message: "Error al crear la empresa" } });
     }
 }
 
@@ -20,11 +20,11 @@ exports.findAll = async (req, res) => {
         if (result.data) {
             return res.status(200).json(result);
         } else {
-            return res.status(404).json({ message: "No se encontraron terminales" });
+            return res.status(404).json({ message: "No se encontraron empresaes" });
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({ error: { message: "Error al consultar la data de las terminales" } });
+        return res.status(500).json({ error: { message: "Error al consultar la data de las empresaes" } });
     }
 };
 
@@ -40,20 +40,8 @@ exports.findId = async (req, res) => {
         return res.status(500).json({ error: { message: "Error al consultar la base de datos" } });
     }
 }
-exports.getOne = async (req, res) => {
-    let result = {};
-    try {
-        result = await getOne(req.nombre);
-        if (result) {
-           return res.status(200).json(result);
-        }
-    } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({ error: { message: "No se pudo encontrar la terminal"} });
-    }
-}
 
-exports.updateTerminal = async (req, res) => {
+exports.updateEmpresa = async (req, res) => {
     let result = {};
     try {
         result = await update(req.body);
@@ -65,15 +53,15 @@ exports.updateTerminal = async (req, res) => {
     }
 }
 
-exports.deleteTerminal = async (req, res) => {
+exports.deleteEmpresa = async (req, res) => {
     let result = {};
     try {
-        result = await deleteTerminal(req.body.id);
+        result = await deleteEmpresa(req.body.id);
         if (result) {
             return res.status(200).json(result);
         }
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({ error: { message: "Error al eliminar la terminal." } });
+        return res.status(500).json({ error: { message: "Error al eliminar la empresa." } });
     }
 }
