@@ -31,6 +31,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
+    fecha_salida: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     hora_llegada: {
       type: DataTypes.STRING,
       allowNull: false
@@ -52,7 +56,7 @@ module.exports = function (sequelize, DataTypes) {
     tableName: 'rutas',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+
     indexes: [
       {
         name: "rutas_pkey",

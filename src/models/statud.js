@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'statud',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "statud_pkey",

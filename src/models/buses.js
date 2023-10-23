@@ -37,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'buses',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "buses_pkey",
