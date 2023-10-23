@@ -16,8 +16,8 @@ exports.createTerminal = async (req, res) => {
 
 exports.findAll = async (req, res) => {
     try {
-        const result = await getAll();
-        if (result.data) {
+        let result = await getAll();
+        if (result) {
             return res.status(200).json(result);
         } else {
             return res.status(404).json({ message: "No se encontraron terminales" });

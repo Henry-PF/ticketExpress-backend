@@ -84,4 +84,4 @@ exports.getId = async (id) => {
     } catch (error) {
         return console.log({ "error": error.message });
     }
-}
+} 
