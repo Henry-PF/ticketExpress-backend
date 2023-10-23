@@ -11,7 +11,7 @@ const handleCrearServicio = async (req, res) => {
 
 const handleServicioId = async (req, res) => {
   try {
-    await serviciosID(req, res); 
+    await serviciosID(req, res);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
