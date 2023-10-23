@@ -1,4 +1,4 @@
-const {create, update, getAll, getId, getOne, deleteRuta} = require("../controllers/rutasControllers");
+const { create, update, getAll, getId, getOne, deleteRuta } = require("../controllers/rutasControllers");
 
 exports.RutaDelete = async (req, res) => {
     let result = {};
@@ -12,7 +12,7 @@ exports.RutaDelete = async (req, res) => {
 exports.RutaUpdate = async (req, res) => {
     let result = {};
     try {
-        result = await update(req.body.DataUpdate,req.body.id);
+        result = await update(req.body.DataUpdate, req.body.id);
     } catch (error) {
         return res.status(500).json({ error: { message: "Error al realizar la operacion." } });
     }

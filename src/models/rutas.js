@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('rutas', {
     id: {
       type: DataTypes.INTEGER,
@@ -23,16 +23,20 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    fecha_salida:{
-      type: DataTypes.DATE,
+    precio: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    fecha_salida: {
+      type: DataTypes.STRING,
       allowNull: false
     },
     hora_llegada: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
       allowNull: false
     },
     hora_salida: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
       allowNull: false
     },
     id_statud: {

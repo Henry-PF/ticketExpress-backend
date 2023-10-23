@@ -1,15 +1,15 @@
 const { Router } = require("express");
 const router = Router();
-const {RutaUpdate,RutaCreate,RutagetAll,RutagetId,RutagetOne,RutaDelete} = require("../handlers/rutasHandler");
-const {validateToken} = require("../middlewares/validateToken");
+const { RutaUpdate, RutaCreate, RutagetAll, RutagetId, RutagetOne, RutaDelete } = require("../handlers/rutasHandler");
+const { validateToken } = require("../middlewares/validateToken");
 
 
-router.post("/",validateToken,RutaCreate);
-router.post("/update",validateToken,RutaUpdate);
-router.post("/getOne",validateToken,RutagetOne);
-router.post("/delete",validateToken,RutaDelete);
-router.get("/getAll", validateToken,RutagetAll);
-router.get("/:id",validateToken,RutagetId);
+router.post("/", RutaCreate);
+router.post("/update", RutaUpdate);
+router.post("/getOne", RutagetOne);
+router.post("/delete", RutaDelete);
+router.get("/getAll", RutagetAll);
+router.get("/:id", RutagetId);
 
 
 

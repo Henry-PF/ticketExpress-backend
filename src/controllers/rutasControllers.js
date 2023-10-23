@@ -3,12 +3,13 @@ const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
     let result = "";
-    let datos = req.body;
+    let datos = req;
+    console.log('DATOS', datos);
     try {
         let dataTerminalO = await terminales.findOne({
             where: {
                 id: {
-                    [Op.eq]: datos.origin
+                    [Op.eq]: datos.origen
                 }
             }
         })
@@ -32,13 +33,15 @@ exports.create = async (req, res) => {
                     let DatanewRuta = {
                         "origen": dataTerminalO.id,
                         "destino": dataTerminalD.id,
+                        "precio": datos.precio,
+                        "fecha_salida": datos.fecha_salida,
                         "hora_llegada": datos.hora_llegada,
                         "hora_salida": datos.hora_salida,
                         "id_statud": datos.statud,
                     }
                     let newRuta = await rutas.create(DatanewRuta);
                     if (newRuta) {
-                        await rutas_empresa.create({ "id_ruta": newRuta.id, "id_empresa": dataEmpresa.id });
+                        // await rutas_empresa.create({ "id_ruta": newRuta.id, "id_empresa": dataEmpresa.id });
                         result.data = newRuta;
                         result.message = "Ruta registrado con éxito";
                     } else {
