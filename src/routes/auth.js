@@ -11,13 +11,11 @@ router.get('/google',
 
 router.get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),
     function (req, res) {
-        console.log(req);
         // Successful authentication, redirect home.
         res.redirect('http://localhost:3000');
     });
 
 router.get('/perfil', (req, res) => {
-    // console.log(req.user);
     if (req.isAuthenticated()) {
         const user = req.user;
         return res.json(user);
