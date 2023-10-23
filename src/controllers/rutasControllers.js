@@ -19,7 +19,7 @@ exports.create = async (datos)=>{
                 }
             });
             if (dataTerminalD) {
-                let dataEmpresa = await empresa.findOne({
+                /*let dataEmpresa = await empresa.findOne({
                     where: {
                         id: {
                             [Op.eq]: datos.empresa
@@ -27,27 +27,28 @@ exports.create = async (datos)=>{
                     }
                 });
                 if(dataEmpresa){
-                    let DatanewRuta={
-                        "origen":dataTerminalO.id,
-                        "destino":dataTerminalD.id,
-                        "precio":datos.precio,
-                        "fecha_salida":datos.fecha_salida,
-                        "hora_llegada":datos.hora_llegada,
-                        "hora_salida":datos.hora_salida,
-                        "id_statud":datos.statud,
-                    }
-                    let newRuta=await rutas.create(DatanewRuta);
-                    if(newRuta){
-                        await rutas_empresa.create({"id_ruta":newRuta.id,"id_empresa":dataEmpresa.id});
-                        result.data    = newRuta;
-                        result.message = "Ruta registrado con éxito";
-                    }else{
-                        result.error   = true;
-                        result.message = "Error al crear la Ruta";
-                    }
+                  
                 }else{
                     result.error   = true;
                     result.message = "No se encontro Empresa";
+                }*/
+                let DatanewRuta={
+                    "origen":dataTerminalO.id,
+                    "destino":dataTerminalD.id,
+                    "precio":datos.precio,
+                    "fecha_salida":datos.fecha_salida,
+                    "hora_llegada":datos.hora_llegada,
+                    "hora_salida":datos.hora_salida,
+                    "id_statud":datos.statud,
+                }
+                let newRuta=await rutas.create(DatanewRuta);
+                if(newRuta){
+                    //await rutas_empresa.create({"id_ruta":newRuta.id,"id_empresa":dataEmpresa.id});
+                    result.data    = newRuta;
+                    result.message = "Ruta registrado con éxito";
+                }else{
+                    result.error   = true;
+                    result.message = "Error al crear la Ruta";
                 }
             }else{
                 result.error   = true;
