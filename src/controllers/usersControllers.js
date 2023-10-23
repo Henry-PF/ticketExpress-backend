@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
 
 exports.create = async (data) => {
+    console.log(data);
     let result = {};
     let dataUser = data.body;
     try {
@@ -17,7 +18,8 @@ exports.create = async (data) => {
                 dni: dta.dni,
                 cuit: dta.cuit,
                 direccion: dta.direccion,
-                telefono: dta.telefono
+                telefono: dta.telefono,
+                googleId: dta.googleId
             }
             let hashF = await bcrypt.hash(dta.password, 10).then(hash => {
                 return hash;
@@ -28,6 +30,7 @@ exports.create = async (data) => {
                 id_statud: "1",
                 type: "usuario",
             }
+            console.log(dtaPersona, dtaUsuario);
             //Verficacion si los datos de la persona ya existe
             const personaExiste = await datos.findOne({ where: { correo: { [Op.eq]: dtaPersona.correo } } })
             if (!personaExiste) {

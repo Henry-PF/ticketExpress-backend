@@ -11,18 +11,8 @@ router.get('/google',
 
 router.get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),
     function (req, res) {
-        // Successful authentication, redirect home.
-        res.redirect('http://localhost:3000');
+        res.redirect('http://localhost:3000')
+        res.json(req.user)
     });
-
-router.get('/perfil', (req, res) => {
-    if (req.isAuthenticated()) {
-        const user = req.user;
-        return res.json(user);
-    } else {
-        res.send('Debes iniciar sesión');
-    }
-    // return res.send('hola')
-});
 
 module.exports = router;
