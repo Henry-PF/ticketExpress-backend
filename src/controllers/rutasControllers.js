@@ -66,48 +66,114 @@ exports.create = async (req, res) => {
     }
     return result;
 }
-exports.update = async (req, res) => {
-    let result = "";
+
+exports.update = async (datos,id)=>{
+    let result="";
     try {
 
+        let dataRutas =await rutas.update(datos, {
+            where: {id:{[Op.eq]: id}}
+        })
+        if(dataRutas){
+            result.data    = dataRutas;
+            result.error   = false;
+            result.message = "Registro editado con éxito";
+        }else{
+            result.error   = true;
+            result.message = "No hay rutas registradas";
+        }
     } catch (error) {
 
+        console.log('Error', error);
     }
     return result;
 }
-exports.getAll = async (req, res) => {
-    let result = "";
+exports.getAll = async ()=>{
+    let result="";
     try {
 
+        let dataRutas =await rutas.findAll({
+            attributes: { exclude: ['createdAt','updatedAt'] },
+            include: [{ model: terminales }]
+        })
+        if(dataRutas){
+            result.data    = dataRutas;
+            result.error   = false;
+            result.message = "Consulta realizada con éxito";
+        }else{
+            result.error   = true;
+            result.message = "No hay rutas registradas";
+        }
     } catch (error) {
 
+        console.log('Error', error);
     }
     return result;
 }
-exports.getOne = async (req, res) => {
-    let result = "";
+exports.getOne = async (where)=>{
+    let result="";
     try {
 
+        let dataRutas =await rutas.findOne({
+            where: where,
+            attributes: { exclude: ['createdAt','updatedAt'] },
+            include: [{ model: terminales }]
+        })
+        if(dataRutas){
+            result.data    = dataRutas;
+            result.error   = false;
+            result.message = "Consulta realizada con éxito";
+        }else{
+            result.error   = true;
+            result.message = "No hay rutas registradas";
+        }
     } catch (error) {
 
+        console.log('Error', error);
     }
     return result;
 }
-exports.delete = async (req, res) => {
-    let result = "";
+exports.deleteRuta = async (id)=>{
+    let result="";
     try {
 
+        let dataRutas =await rutas.update({ id_statud: "8" }, {
+            where: {id:{[Op.eq]: id}}
+        })
+        if(dataRutas){
+            result.data    = dataRutas;
+            result.error   = false;
+            result.message = "Registro eliminado con éxito";
+        }else{
+            result.error   = true;
+            result.message = "No hay rutas registradas";
+        }
     } catch (error) {
 
+        console.log('Error', error);
     }
     return result;
 }
-exports.getId = async (req, res) => {
-    let result = "";
+exports.getId  = async (id)=>{
+    let result="";
     try {
 
+        let dataRutas =await rutas.findOne({
+            where: {id:{[Op.eq]: id}},
+            attributes: { exclude: ['createdAt','updatedAt'] },
+            include: [{ model: terminales }]
+        })
+        if(dataRutas){
+            result.data    = dataRutas;
+            result.error   = false;
+            result.message = "Consulta realizada con éxito";
+        }else{
+            result.error   = true;
+            result.message = "No hay rutas registradas";
+        }
     } catch (error) {
 
+        console.log('Error', error);
     }
     return result;
 }
