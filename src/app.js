@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const passport = require("passport");
+const serviciosRoute = require('./routes/serviciosRoute.js')
 
 const fileupload = require("express-fileupload");
 
@@ -50,6 +51,7 @@ server.use((req, res, next) => {
 });
 
 server.use("/", routes);
+server.use("/servicios", serviciosRoute);
 
 server.use((err, req, res, next) => {
   const status = err.status || 500;
