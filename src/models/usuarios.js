@@ -5,7 +5,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      aitoIncrement: true,
+      autoIncrement: true
     },
     nick: {
       type: DataTypes.STRING(50),
@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
       unique: "usuarios_nick_key"
     },
     password: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     id_statud: {
