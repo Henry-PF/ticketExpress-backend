@@ -17,7 +17,7 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(
     DB_URL,
     {
-      logging: false,
+      logging: true,
       native: false,
       dialectOptions: {
         ssl: {

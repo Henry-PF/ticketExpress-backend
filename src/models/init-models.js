@@ -18,22 +18,22 @@ var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
 
 function initModels(sequelize) {
+  var datos = _datos(sequelize, DataTypes);
+  var provincias = _provincias(sequelize, DataTypes);
+  var statud = _statud(sequelize, DataTypes);
+  var ciudades = _ciudades(sequelize, DataTypes);
+  var terminales = _terminales(sequelize, DataTypes);
+  var rutas = _rutas(sequelize, DataTypes);
+  var servicios = _servicios(sequelize, DataTypes);
+  var empresas = _empresas(sequelize, DataTypes);
+  var pasajeros = _pasajeros(sequelize, DataTypes);
   var boletos = _boletos(sequelize, DataTypes);
   var buses = _buses(sequelize, DataTypes);
   var buses_empresa = _buses_empresa(sequelize, DataTypes);
   var buses_rutas = _buses_rutas(sequelize, DataTypes);
   var buses_servicios = _buses_servicios(sequelize, DataTypes);
-  var ciudades = _ciudades(sequelize, DataTypes);
-  var datos = _datos(sequelize, DataTypes);
-  var empresas = _empresas(sequelize, DataTypes);
   var pago_boletos = _pago_boletos(sequelize, DataTypes);
-  var pasajeros = _pasajeros(sequelize, DataTypes);
-  var provincias = _provincias(sequelize, DataTypes);
-  var rutas = _rutas(sequelize, DataTypes);
   var rutas_empresa = _rutas_empresa(sequelize, DataTypes);
-  var servicios = _servicios(sequelize, DataTypes);
-  var statud = _statud(sequelize, DataTypes);
-  var terminales = _terminales(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
 
   buses.belongsToMany(empresas, {  through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
