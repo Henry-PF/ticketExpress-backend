@@ -5,6 +5,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true
     },
     nick: {
       type: DataTypes.STRING(50),

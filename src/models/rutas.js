@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     origen: {
       type: DataTypes.INTEGER,
@@ -21,6 +22,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'terminales',
         key: 'id'
       }
+    },
+    fecha_salida:{
+      type: DataTypes.DATE,
+      allowNull: false
     },
     hora_llegada: {
       type: DataTypes.TIME,
