@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
 
-
 exports.create = async (data) => {
     let result = {};
     let dataUser = data.body;
@@ -27,7 +26,7 @@ exports.create = async (data) => {
                 nick: dta.nick,
                 password: hashF,
                 id_statud: "1",
-                type: "usuario"
+                type: "usuario",
             }
             //Verficacion si los datos de la persona ya existe
             const personaExiste = await datos.findOne({ where: { correo: { [Op.eq]: dtaPersona.correo } } })
@@ -44,21 +43,21 @@ exports.create = async (data) => {
             if (user) {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
-                await sendEmail(
-                    dtaPersona.correo_electronico,
-                    "Bienvenido a SmartPay ✔",
-                    "<h1>Bienvenido a SmartPay</h1>",
-                    `<p>Hola ${dtaPersona.nombre},</p>
-                        <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
-                    <p>
-                    A continuación, encontrarás algunos detalles sobre tu cuenta:
-                    </p>
-                    <ul>
-                        <li>Nombre de usuario: ${dataUser.usuario}</li>
-                    </ul>
-                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
-                    <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
-                );
+                // await sendEmail(
+                //     dtaPersona.correo,
+                //     "Bienvenido a SmartPay ✔",
+                //     "<h1>Bienvenido a SmartPay</h1>",
+                //     `<p>Hola ${dtaPersona.nombre},</p>
+                //         <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
+                //     <p>
+                //     A continuación, encontrarás algunos detalles sobre tu cuenta:
+                //     </p>
+                //     <ul>
+                //         <li>Nombre de usuario: ${dataUser.usuario}</li>
+                //     </ul>
+                //     <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
+                //     <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
+                // );
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
             } else {
@@ -126,7 +125,6 @@ exports.FindID = async (id) => {
 
 exports.login = async (data) => {
     let result = {};
-    console.log(data);
     try {
         await datos.findOne({
             include: [
@@ -134,24 +132,25 @@ exports.login = async (data) => {
                     model: usuarios,
                     include: { model: statud },
                     where: {
-                        isactivo: {
-                            [Op.eq]: true
+                        id_statud: {
+                            [Op.eq]: 1
                         }
                     }
                 }
             ],
             where: {
-                correo_electronico: {
-                    [Op.eq]: data.user
+                correo: {
+                    [Op.eq]: data.correo
                 }
             }
         }).then((dta) => {
+            console.log('2', dta.usuarios[0]);
             if (dta) {
-                if (!bcrypt.compareSync(data.pass, dta.usuarios[0].password)) {
+                if (!bcrypt.compareSync(data.password, dta.usuarios[0].password)) {
                     throw new Error('Contraseña incorrecta');
                 } else {
                     const secretKey = "mZ1IWqsOvcTD31fPsDLig8TZ7v8nkTTB";
-                    const token = jwt.sign({ userId: dta.usuarios[0].nombre_usuario.id }, secretKey, {
+                    const token = jwt.sign({ userId: dta.usuarios[0].nick.id }, secretKey, {
                         expiresIn: "1h",
                     });
                     result.data = dta;

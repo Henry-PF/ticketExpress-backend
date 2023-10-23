@@ -1,44 +1,44 @@
 {
   "development": {
     "username": "db_user",
-    "password": "CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ",
-    "database": "ticket_tsrw",
-    "host": "dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com",
+    "password": "HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe",
+    "database": "ticket_vsoy_1sri",
+    "host": "dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com",
     "dialect": "postgresql",
     "use_env_variable": false,
-    "url": "postgres://db_user:CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ@dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com/ticket_tsrw",
+    "url": "postgres://db_user:HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe@dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com/ticket_vsoy_1sri",
     "dialectOptions": {
-        "ssl": {
-          "require": true
-        }
+      "ssl": {
+        "require": true
       }
+    }
   },
   "test": {
     "username": "db_user",
-    "password": "CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ",
-    "database": "ticket_tsrw",
-    "host": "dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com",
+    "password": "HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe",
+    "database": "ticket_vsoy_1sri",
+    "host": "dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com",
     "dialect": "postgresql",
     "use_env_variable": false,
-    "url": "postgres://db_user:CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ@dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com/ticket_tsrw",
+    "url": "postgres://db_user:HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe@dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com/ticket_vsoy_1sri",
     "dialectOptions": {
-        "ssl": {
-          "require": true
-        }
+      "ssl": {
+        "require": true
       }
+    }
   },
   "production": {
     "username": "db_user",
-    "password": "CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ",
-    "database": "ticket_tsrw",
-    "host": "dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com",
+    "password": "HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe",
+    "database": "ticket_vsoy_1sri",
+    "host": "dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com",
     "dialect": "postgresql",
     "use_env_variable": false,
-    "url": "postgres://db_user:CE3PzB6hrScuSZnPXu3YFN5Gg6LbicFZ@dpg-cki0bdse1qns73cnk870-a.oregon-postgres.render.com/ticket_tsrw",
+    "url": "postgres://db_user:HZoPapaYeHsJ0K2wobPMYkSqei5Y2Jfe@dpg-ckqs5bhrfc9c73ao3s7g-a.oregon-postgres.render.com/ticket_vsoy_1sri",
     "dialectOptions": {
-        "ssl": {
-          "require": true
-        }
+      "ssl": {
+        "require": true
       }
+    }
   }
 }

@@ -15,7 +15,6 @@ const server = express();
 
 server.name = "API";
 
-
 server.use(
   session({
     secret: '123456',
