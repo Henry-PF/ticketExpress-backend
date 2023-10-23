@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     nombre: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     }
   }, {

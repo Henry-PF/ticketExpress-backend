@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: "pago_boletos_id_boleto_key"
     },
     tipo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     },
     fecha: {
@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     },
     ref: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {

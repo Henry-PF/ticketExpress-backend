@@ -1,11 +1,11 @@
 const cloudinary = require("cloudinary");
-
-const CLOUDINARY_URL="cloudinary://434734818974985:hFZ552vypzRW2Gmrc5cvfqzTcF0@dwlup3pzb"
+const process = require("process");
+const env = process.env
 
 cloudinary.config({
-    cloud_name: "dwlup3pzb",
-    api_key: "434734818974985",
-    api_secret: "hFZ552vypzRW2Gmrc5cvfqzTcF0",
+    cloud_name: env.cloud_name,
+    api_key: env.api_key,
+    api_secret: env.api_secret,
 });
 
 

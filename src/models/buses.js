@@ -7,15 +7,15 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     modelo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     },
     marca: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     },
     placa: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING,
       allowNull: false,
       unique: "buses_placa_key"
     },

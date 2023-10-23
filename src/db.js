@@ -14,18 +14,11 @@ const db = [];
 
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(
-    DB_URL,
-    {
-      logging: false,
-      native: false,
-      dialectOptions: {
-        ssl: {
-          require: 'true'
-        }
-      }
-    }
-  );
+  sequelize = new Sequelize(DB_URL, {
+    logging: false,
+    native: false,
+    dialectOptions: {},
+  });
 } else {
   sequelize = new Sequelize(
     config.database,
