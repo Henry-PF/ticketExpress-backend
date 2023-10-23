@@ -30,6 +30,8 @@ exports.create = async (datos)=>{
                     let DatanewRuta={
                         "origen":dataTerminalO.id,
                         "destino":dataTerminalD.id,
+                        "precio":datos.precio,
+                        "fecha_salida":datos.fecha_salida,
                         "hora_llegada":datos.hora_llegada,
                         "hora_salida":datos.hora_salida,
                         "id_statud":datos.statud,

@@ -23,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    precio:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     fecha_salida:{
       type: DataTypes.DATE,
       allowNull: false
