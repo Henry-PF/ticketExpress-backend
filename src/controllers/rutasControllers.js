@@ -1,6 +1,5 @@
 const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa } = require("../db");
 const { Op } = require("sequelize");
-const terminales = require("../models/terminales");
 
 exports.create = async (req, res) => {
     let result = "";
@@ -61,6 +60,7 @@ exports.create = async (req, res) => {
     } catch (error) {
         console.log('Error', error);
     }
+    return result;
 }
 exports.update = async (req, res) => {
     let result = "";
@@ -69,6 +69,7 @@ exports.update = async (req, res) => {
     } catch (error) {
 
     }
+    return result;
 }
 exports.getAll = async (req, res) => {
     let result = "";
@@ -77,6 +78,7 @@ exports.getAll = async (req, res) => {
     } catch (error) {
 
     }
+    return result;
 }
 exports.getOne = async (req, res) => {
     let result = "";
@@ -85,6 +87,7 @@ exports.getOne = async (req, res) => {
     } catch (error) {
 
     }
+    return result;
 }
 exports.delete = async (req, res) => {
     let result = "";
@@ -93,6 +96,7 @@ exports.delete = async (req, res) => {
     } catch (error) {
 
     }
+    return result;
 }
 exports.getId = async (req, res) => {
     let result = "";
@@ -101,4 +105,5 @@ exports.getId = async (req, res) => {
     } catch (error) {
 
     }
+    return result;
 }
