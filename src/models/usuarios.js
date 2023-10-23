@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('usuarios', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      aitoIncrement: true,
     },
     nick: {
       type: DataTypes.STRING(50),
@@ -32,6 +33,10 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     type: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    googleId: {
       type: DataTypes.STRING,
       allowNull: true
     }

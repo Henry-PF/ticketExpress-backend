@@ -44,21 +44,21 @@ exports.create = async (data) => {
             if (user) {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
-                await sendEmail(
-                    dtaPersona.correo_electronico,
-                    "Bienvenido a SmartPay ✔",
-                    "<h1>Bienvenido a SmartPay</h1>",
-                    `<p>Hola ${dtaPersona.nombre},</p>
-                        <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
-                    <p>
-                    A continuación, encontrarás algunos detalles sobre tu cuenta:
-                    </p>
-                    <ul>
-                        <li>Nombre de usuario: ${dataUser.usuario}</li>
-                    </ul>
-                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
-                    <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
-                );
+                // await sendEmail(
+                //     dtaPersona.correo_electronico,
+                //     "Bienvenido a SmartPay ✔",
+                //     "<h1>Bienvenido a SmartPay</h1>",
+                //     `<p>Hola ${dtaPersona.nombre},</p>
+                //         <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
+                //     <p>
+                //     A continuación, encontrarás algunos detalles sobre tu cuenta:
+                //     </p>
+                //     <ul>
+                //         <li>Nombre de usuario: ${dataUser.usuario}</li>
+                //     </ul>
+                //     <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
+                //     <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
+                // );
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
             } else {
