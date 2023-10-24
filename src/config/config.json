@@ -1,0 +1,44 @@
+{
+  "development": {
+    "username": "localhost",
+    "password": "localhost",
+    "database": "localhost",
+    "host": "dpg-localhost-a.oregon-postgres.render.com",
+    "dialect": "postgresql",
+    "use_env_variable": true,
+    "url": "localhost",
+    "dialectOptions": {
+      "ssl": {
+        "require": true
+      }
+    }
+  },
+  "test": {
+    "username": "localhost",
+    "password": "localhost",
+    "database": "localhost",
+    "host": "dpg-localhost-a.oregon-postgres.render.com",
+    "dialect": "postgresql",
+    "use_env_variable": true,
+    "url": "localhost",
+    "dialectOptions": {
+      "ssl": {
+        "require": true
+      }
+    }
+  },
+  "production": {
+    "username": "localhost",
+    "password": "localhost",
+    "database": "localhost",
+    "host": "dpg-localhost-a.oregon-postgres.render.com",
+    "dialect": "postgresql",
+    "use_env_variable": true,
+    "url": "localhost",
+    "dialectOptions": {
+      "ssl": {
+        "require": true
+      }
+    }
+  }
+}
