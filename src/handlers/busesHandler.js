@@ -1,6 +1,6 @@
-const { update, findAll, FindID, Delete, findEmail, create } = require("../controllers/usersControllers");
+const { create, getAll, deleteBus, getId, update } = require('../controllers/busesControllers');
 
-exports.UserCreate = async (req, res) => {
+exports.createBus = async (req, res) => {
     let result = {};
     try {
         result = await create(req);
@@ -13,31 +13,23 @@ exports.UserCreate = async (req, res) => {
     }
 }
 
-exports.UserUpdate = async (req, res) => {
-    let result = {};
-    try {
-
-    } catch (error) {
-        return res.status(500).json({ error: { message: "Error al actualizar el usuario." } });
-    }
-}
-
 exports.findAll = async (req, res) => {
-    let result = {};
     try {
-        result = await findAll();
-        if (result) {
+        const result = await getAll();
+        if (result.data) {
             res.status(200).json(result);
+        } else {
+            res.status(404).json({ message: "No se encontraron datos de autobuses." });
         }
     } catch (error) {
-        return res.status(500).json({ error: { message: "Error al consultar la data del usuario." } });
+        res.status(500).json({ error: { message: "Error al consultar la data de los buses." } });
     }
-}
+};
 
 exports.findId = async (req, res) => {
     let result = {};
     try {
-        result = await FindID(req.params.id);
+        result = await getId(req.params.id);
         if (result) {
             res.status(200).json(result);
         }
@@ -46,26 +38,26 @@ exports.findId = async (req, res) => {
     }
 }
 
-exports.findCorreo = async (req, res) => {
+exports.updateBus = async (req, res) => {
     let result = {};
     try {
-        result = await findEmail(req.body);
+        result = await update(req.body);
         if (result) {
             res.status(200).json(result);
         }
     } catch (error) {
-        return res.status(500).json({ error: { message: "Error al consultar la base de datos." } });
+        return res.status(500).json({ error: { message: "Error al actualizar los datos." } });
     }
 }
 
-exports.Userdelete = async (req, res) => {
+exports.deleteBus = async (req, res) => {
     let result = {};
     try {
-        result = await Delete(req.body.id);
+        result = await deleteBus(req.body.id);
         if (result) {
             res.status(200).json(result);
         }
     } catch (error) {
-        return res.status(500).json({ error: { message: "Error al consultar la base de datos." } });
+        return res.status(500).json({ error: { message: "Error al eliminar el bus." } });
     }
 }

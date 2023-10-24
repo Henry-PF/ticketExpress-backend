@@ -1,19 +1,21 @@
 const nodemailer = require("nodemailer");
+const process = require("process");
+const env = process.env
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-        user: process.env.GOOGLE_MAIL,
-        pass: process.env.GOOGLE_MAIL_PASS
+        user: env.mailer_user,
+        pass: env.mailer_pass
     }
 });
 
 const sendEmail = async (to, subject, text, html) => {
     try {
         const info = {
-            from: '"SmartPay" <pf.henry.wallet@gmail.com>',
+            from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
             to,
             subject,
             text,

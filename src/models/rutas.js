@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('rutas', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     origen: {
       type: DataTypes.INTEGER,
@@ -22,12 +23,24 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
+    precio: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    fecha_salida: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    fecha_salida: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     hora_llegada: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
       allowNull: false
     },
     hora_salida: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
       allowNull: false
     },
     id_statud: {
@@ -43,7 +56,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'rutas',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+
     indexes: [
       {
         name: "rutas_pkey",

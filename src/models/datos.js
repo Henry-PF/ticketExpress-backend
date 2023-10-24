@@ -1,37 +1,38 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('datos', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     nombre: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     },
     apellido: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: true
     },
     correo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     dni: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING,
       allowNull: true
     },
     cuit: {
-      type: DataTypes.STRING(11),
+      type: DataTypes.STRING,
       allowNull: true
     },
     direccion: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: true
     },
     telefono: {
-      type: DataTypes.STRING(15),
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
@@ -39,7 +40,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'datos',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "datos_pkey",
