@@ -2,9 +2,8 @@ const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa } = requ
 const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
-    let result = "";
+    let result = {};
     let datos = req;
-    console.log('DATOS', datos);
     try {
         let dataTerminalO = await terminales.findOne({
             where: {
@@ -67,19 +66,19 @@ exports.create = async (req, res) => {
     return result;
 }
 
-exports.update = async (datos,id)=>{
-    let result="";
+exports.update = async (datos, id) => {
+    let result = {};
     try {
 
-        let dataRutas =await rutas.update(datos, {
-            where: {id:{[Op.eq]: id}}
+        let dataRutas = await rutas.update(datos, {
+            where: { id: { [Op.eq]: id } }
         })
-        if(dataRutas){
-            result.data    = dataRutas;
-            result.error   = false;
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
             result.message = "Registro editado con éxito";
-        }else{
-            result.error   = true;
+        } else {
+            result.error = true;
             result.message = "No hay rutas registradas";
         }
     } catch (error) {
@@ -88,20 +87,20 @@ exports.update = async (datos,id)=>{
     }
     return result;
 }
-exports.getAll = async ()=>{
-    let result="";
+exports.getAll = async () => {
+    let result = {};
     try {
 
-        let dataRutas =await rutas.findAll({
-            attributes: { exclude: ['createdAt','updatedAt'] },
+        let dataRutas = await rutas.findAll({
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [{ model: terminales }]
         })
-        if(dataRutas){
-            result.data    = dataRutas;
-            result.error   = false;
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
             result.message = "Consulta realizada con éxito";
-        }else{
-            result.error   = true;
+        } else {
+            result.error = true;
             result.message = "No hay rutas registradas";
         }
     } catch (error) {
@@ -110,21 +109,21 @@ exports.getAll = async ()=>{
     }
     return result;
 }
-exports.getOne = async (where)=>{
-    let result="";
+exports.getOne = async (where) => {
+    let result = {};
     try {
 
-        let dataRutas =await rutas.findOne({
+        let dataRutas = await rutas.findOne({
             where: where,
-            attributes: { exclude: ['createdAt','updatedAt'] },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [{ model: terminales }]
         })
-        if(dataRutas){
-            result.data    = dataRutas;
-            result.error   = false;
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
             result.message = "Consulta realizada con éxito";
-        }else{
-            result.error   = true;
+        } else {
+            result.error = true;
             result.message = "No hay rutas registradas";
         }
     } catch (error) {
@@ -133,19 +132,19 @@ exports.getOne = async (where)=>{
     }
     return result;
 }
-exports.deleteRuta = async (id)=>{
-    let result="";
+exports.deleteRuta = async (id) => {
+    let result = {};
     try {
 
-        let dataRutas =await rutas.update({ id_statud: "8" }, {
-            where: {id:{[Op.eq]: id}}
+        let dataRutas = await rutas.update({ id_statud: "8" }, {
+            where: { id: { [Op.eq]: id } }
         })
-        if(dataRutas){
-            result.data    = dataRutas;
-            result.error   = false;
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
             result.message = "Registro eliminado con éxito";
-        }else{
-            result.error   = true;
+        } else {
+            result.error = true;
             result.message = "No hay rutas registradas";
         }
     } catch (error) {
@@ -154,21 +153,51 @@ exports.deleteRuta = async (id)=>{
     }
     return result;
 }
-exports.getId  = async (id)=>{
-    let result="";
+
+exports.getId = async (id) => {
+    let result = {};
     try {
 
-        let dataRutas =await rutas.findOne({
-            where: {id:{[Op.eq]: id}},
-            attributes: { exclude: ['createdAt','updatedAt'] },
+        let dataRutas = await rutas.findOne({
+            where: { id: { [Op.eq]: id } },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [{ model: terminales }]
         })
-        if(dataRutas){
-            result.data    = dataRutas;
-            result.error   = false;
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
             result.message = "Consulta realizada con éxito";
-        }else{
-            result.error   = true;
+        } else {
+            result.error = true;
+            result.message = "No hay rutas registradas";
+        }
+    } catch (error) {
+
+        console.log('Error', error);
+    }
+    return result;
+}
+
+exports.filterRoute = async (data) => {
+    console.log('Controlers', data);
+    let result = {};
+    try {
+
+        let dataRutas = await rutas.findAll({
+            where: {
+                origen: { [Op.eq]: data.dataOrigen },
+                destino: { [Op.eq]: data.dataDestino },
+                fecha_salida: { [Op.eq]: data.fecha_salida },
+            },
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            include: [{ model: terminales }]
+        })
+        if (dataRutas) {
+            result.data = dataRutas;
+            result.error = false;
+            result.message = "Consulta realizada con éxito";
+        } else {
+            result.error = true;
             result.message = "No hay rutas registradas";
         }
     } catch (error) {

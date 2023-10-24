@@ -1,4 +1,4 @@
-const { create, update, getAll, getId, getOne, deleteRuta } = require("../controllers/rutasControllers");
+const { create, update, getAll, getId, getOne, deleteRuta, filterRoute } = require("../controllers/rutasControllers");
 
 exports.RutaDelete = async (req, res) => {
     let result = {};
@@ -72,4 +72,20 @@ exports.RutagetOne = async (req, res) => {
     }
 }
 
+exports.RutaFiltro = async (req, res) => {
+    const { origen, destino, fecha_salida } = req.query;
+    let dataOrigen = parseInt(origen, 10);
+    let dataDestino = parseInt(destino, 10);
+    let data = { dataOrigen, dataDestino, fecha_salida }; // Cambiar "filters" a "data"
+    console.log(data);
+    let result = {};
+    try {
+        result = await filterRoute(data); // Corregir el nombre de la función
+        if (result) {
+            res.status(200).json(result);
+        }
+    } catch (error) {
+        return res.status(500).json({ error: { message: "Error al realizar la operación." } });
+    }
+}
 

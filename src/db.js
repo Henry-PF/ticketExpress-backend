@@ -13,28 +13,28 @@ const { DB_URL } = process.env;
 const db = [];
 
 
- let sequelize;
- if (config.use_env_variable) {
-   sequelize = new Sequelize(
-     DB_URL,
-     {
-       logging: true,
-       native: false,
-       dialectOptions: {
-         ssl: {
-           require: 'true'
-         }
-       }
-     }
-   );
- } else {
-   sequelize = new Sequelize(
-     config.database,
-     config.username,
-     config.password,
-     config
-   );
- }
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(
+    DB_URL,
+    {
+      logging: false,
+      native: false,
+      dialectOptions: {
+        // ssl: {
+        //   require: 'true'
+        // }
+      }
+    }
+  );
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
+}
 
 
 fs.readdirSync(path.join(__dirname, "/models"))
@@ -44,12 +44,12 @@ fs.readdirSync(path.join(__dirname, "/models"))
       file !== basename &&
       file.slice(-3) === ".js" &&
       file.indexOf(".test.js") === -1
-    );     
+    );
   })
   .forEach((file) => {
     db.push(require(path.join(__dirname, "/models", file)));
   });
-  
+
 db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
 
 sequelize.models = initModels.initModels(sequelize);
