@@ -30,7 +30,6 @@ exports.create = async (data) => {
                 id_statud: "1",
                 type: "usuario",
             }
-            console.log(dtaPersona, dtaUsuario);
             //Verficacion si los datos de la persona ya existe
             const personaExiste = await datos.findOne({ where: { correo: { [Op.eq]: dtaPersona.correo } } })
             if (!personaExiste) {
@@ -147,7 +146,6 @@ exports.login = async (data) => {
                 }
             }
         }).then((dta) => {
-            console.log('2', dta.usuarios[0]);
             if (dta) {
                 if (!bcrypt.compareSync(data.password, dta.usuarios[0].password)) {
                     throw new Error('Contraseña incorrecta');
