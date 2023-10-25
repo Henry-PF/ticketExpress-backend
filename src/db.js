@@ -12,13 +12,21 @@ const config = require(__dirname + "/config/config.json")[env];
 const { DB_URL } = process.env;
 const db = [];
 
+
 let sequelize;
 if (config.use_env_variable) {
-  sequelize = new Sequelize(DB_URL, {
-    logging: false,
-    native: false,
-    dialectOptions: {},
-  });
+  sequelize = new Sequelize(
+    DB_URL,
+    {
+      logging: false,
+      native: false,
+      dialectOptions: {
+        // ssl: {
+        //   require: 'true'
+        // }
+      }
+    }
+  );
 } else {
   sequelize = new Sequelize(
     config.database,
@@ -27,6 +35,7 @@ if (config.use_env_variable) {
     config
   );
 }
+
 
 fs.readdirSync(path.join(__dirname, "/models"))
   .filter((file) => {
@@ -40,10 +49,12 @@ fs.readdirSync(path.join(__dirname, "/models"))
   .forEach((file) => {
     db.push(require(path.join(__dirname, "/models", file)));
   });
-// Injectamos la conexion (sequelize) a todos los modelos
+
 db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
 
 sequelize.models = initModels.initModels(sequelize);
+
+console.log(sequelize.models, 'SEQUELIZE.MODELS')
 module.exports = {
   ...sequelize.models,
   conn: sequelize,

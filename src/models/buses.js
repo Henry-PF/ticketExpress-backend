@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     modelo: {
       type: DataTypes.STRING,
@@ -36,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'buses',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "buses_pkey",

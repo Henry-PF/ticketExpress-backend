@@ -2,9 +2,11 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('empresas', {
     id: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     id_datos: {
       type: DataTypes.INTEGER,
@@ -27,7 +29,6 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'empresas',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
     indexes: [
       {
         name: "empresas_pkey",

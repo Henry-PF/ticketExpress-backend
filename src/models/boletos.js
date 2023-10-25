@@ -4,7 +4,8 @@ module.exports = function (sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     id_ruta: {
       type: DataTypes.INTEGER,
@@ -51,7 +52,7 @@ module.exports = function (sequelize, DataTypes) {
     tableName: 'boletos',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "boletos_pkey",

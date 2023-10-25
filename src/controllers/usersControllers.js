@@ -17,7 +17,8 @@ exports.create = async (data) => {
                 dni: dta.dni,
                 cuit: dta.cuit,
                 direccion: dta.direccion,
-                telefono: dta.telefono
+                telefono: dta.telefono,
+                googleId: dta.googleId
             }
             let hashF = await bcrypt.hash(dta.password, 10).then(hash => {
                 return hash;
@@ -44,7 +45,6 @@ exports.create = async (data) => {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
                 // await sendEmail(
-                //     dtaPersona.correo,
                 //     "Bienvenido a SmartPay ✔",
                 //     "<h1>Bienvenido a SmartPay</h1>",
                 //     `<p>Hola ${dtaPersona.nombre},</p>

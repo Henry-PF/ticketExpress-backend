@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     id_boleto: {
       type: DataTypes.INTEGER,
@@ -34,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'pago_boletos',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "pago_boletos_id_boleto_key",

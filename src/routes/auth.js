@@ -6,23 +6,17 @@ const passport = require("passport");
 router.post("/login", login);
 router.post("/register", Register);
 
-router.get('/google',
-    passport.authenticate('google', { scope: ['email', 'profile'] }));
+router.get('/google',passport.authenticate('google', { scope: ['email', 'profile'] }));
 
-router.get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),
-    function (req, res) {
+router.get('/callback', passport.authenticate('google', { failureRedirect: '/login' }),function (req, res) {
         // Successful authentication, redirect home.
         res.redirect('http://localhost:3000');
-    });
-
+ });
 router.get('/perfil', (req, res) => {
     if (req.isAuthenticated()) {
         const user = req.user;
-        return res.json(user);
-    } else {
-        res.send('Debes iniciar sesión');
+        res.cookie('userData', JSON.stringify(user));
+        res.redirect('http://localhost:3000');
     }
-    // return res.send('hola')
 });
-
 module.exports = router;
