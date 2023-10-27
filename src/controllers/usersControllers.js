@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
 
 exports.create = async (data) => {
-    console.log(data);
     let result = {};
     let dataUser = data.body;
     try {
@@ -30,7 +29,6 @@ exports.create = async (data) => {
                 id_statud: "1",
                 type: "usuario",
             }
-            console.log(dtaPersona, dtaUsuario);
             //Verficacion si los datos de la persona ya existe
             const personaExiste = await datos.findOne({ where: { correo: { [Op.eq]: dtaPersona.correo } } })
             if (!personaExiste) {
@@ -47,7 +45,6 @@ exports.create = async (data) => {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
                 // await sendEmail(
-                //     dtaPersona.correo_electronico,
                 //     "Bienvenido a SmartPay ✔",
                 //     "<h1>Bienvenido a SmartPay</h1>",
                 //     `<p>Hola ${dtaPersona.nombre},</p>
