@@ -16,7 +16,11 @@ var _servicios = require("./servicios");
 var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
+
+var _asientos = require('./asientos')
+
 var _reserva = require("./reserva");
+
 
 function initModels(sequelize) {
   var datos = _datos(sequelize, DataTypes);
@@ -36,7 +40,11 @@ function initModels(sequelize) {
   var pago_boletos = _pago_boletos(sequelize, DataTypes);
   var rutas_empresa = _rutas_empresa(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
+
+  var asientos = _asientos(sequelize, DataTypes)
+
   var reserva = _reserva(sequelize, DataTypes);
+
 
   buses.belongsToMany(empresas, { through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
   buses.belongsToMany(rutas, { through: buses_rutas, foreignKey: "id_bus", otherKey: "id_ruta" });
@@ -100,10 +108,17 @@ function initModels(sequelize) {
   terminales.hasMany(rutas, { foreignKey: "destino" });
   rutas.belongsTo(terminales, { foreignKey: "origen" });
   terminales.hasMany(rutas, { foreignKey: "origen" });
+
+  asientos.belongsTo(buses, { foreignKey: "id_buses" });
+  buses.hasMany(asientos, { foreignKey: "id_buses" });
+
+
   usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
   reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
 
+
   return {
+    asientos,
     boletos,
     buses,
     buses_empresa,
