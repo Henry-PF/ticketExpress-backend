@@ -4,14 +4,15 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     nombre: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     },
     tipo: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: false
     }
   }, {
@@ -19,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'statud',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "statud_pkey",

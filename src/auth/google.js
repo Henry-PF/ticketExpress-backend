@@ -1,6 +1,9 @@
 const passport = require('passport');
+const securePassword = require('secure-random-password');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('../models/usuarios');
+const { usuarios, datos } = require('../db');
+const bcrypt = require("bcrypt");
+const { Op } = require('sequelize');
 
 const GOOGLE_CLIENT_ID = '70581296445-v2s6fqgqf60dsp0p8vp7m5jopr332d01.apps.googleusercontent.com'
 const GOOGLE_CLIENT_SECRET = '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'
@@ -15,42 +18,50 @@ passport.use(
             passReqToCallback: true,
         },
         async (request, accessToken, refreshToken, profile, done) => {
-            // const defaultUser = {
-            //     googleId: profile.id,
-            //     nombre: profile.name.givenName,
-            //     apellido: profile.name.familyName,
-            //     correo_electronico: profile.emails.value,
-            // };
 
-            // Busca o crea el usuario en la base de datos
-            // User.findOrCreate({
-            //     where: { googleId: profile.id },
-            //     defaults: defaultUser,
-            // })
-            //     .then(([user, created]) => {
-            //         if (created) {
-            //             // Si el usuario se creó, lo autenticamos
-            //             return done(null, user);
-            //         } else {
-            //             // Si el usuario ya existía, simplemente lo autenticamos
-            //             return done(null, user);
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         console.log(error);
-            //         done(error, null);
-            //     });
+            const userExist = await usuarios.findOne({ where: { googleId: { [Op.eq]: profile.id } } })
+
+            if (!userExist) {
+                const defaultUser = {
+                    nombre: profile.name.givenName,
+                    apellido: profile.name.familyName,
+                    correo: profile.emails[0].value,
+                    dni: 0,
+                    direccion: '',
+                };
+
+                let userData = await datos.create(defaultUser);
+
+                const password = securePassword.randomPassword({ length: 12, characters: securePassword.lower + securePassword.upper + securePassword.digits });
+
+                // Crear un hash de la contraseña
+                const hash = await bcrypt.hash(password, 10);
+
+                if (userData) {
+                    await usuarios.create({
+                        nick: profile.displayName,
+                        password: hash,
+                        googleId: profile.id,
+                        id_datos: userData.id,
+                        id_statud: "1",
+                        type: "usuario"
+                    })
+                }
+            }
             done(null, profile)
         }
     )
 );
 
-passport.serializeUser((user, done) => {
-    done(null, user); // Serializa el ID del usuario en la sesión
+passport.serializeUser(function (user, cb) {
+    process.nextTick(function () {
+        return cb(null, user);
+    });
 });
 
-passport.deserializeUser(async (id, done) => {
-    done(null, id);
+passport.deserializeUser((user, done) => {
+    console.log('user', user);
+    done(null, user); // Recupera los datos del usuario de la sesión
 });
 
 module.exports = passport;

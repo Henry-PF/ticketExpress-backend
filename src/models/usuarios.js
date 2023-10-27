@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('usuarios', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     nick: {
       type: DataTypes.STRING(50),
@@ -12,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: "usuarios_nick_key"
     },
     password: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     id_statud: {
@@ -44,7 +45,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'usuarios',
     schema: 'public',
     timestamps: false,
-    ssl: '[object Object]',
+    
     indexes: [
       {
         name: "usuarios_nick_key",

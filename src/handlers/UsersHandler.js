@@ -1,6 +1,17 @@
-const {update, findAll, FindID, Delete ,findEmail} = require("../controllers/usersControllers");
+const { update, findAll, FindID, Delete, findEmail, create } = require("../controllers/usersControllers");
 
-
+exports.UserCreate = async (req, res) => {
+    let result = {};
+    try {
+        result = await create(req);
+        if (result) {
+            res.status(200).json(result);
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: { message: "Error al registrar el usuario." } });
+    }
+}
 
 exports.UserUpdate = async (req, res) => {
     let result = {};
@@ -34,6 +45,7 @@ exports.findId = async (req, res) => {
         return res.status(500).json({ error: { message: "Error al consultar la base de datos." } });
     }
 }
+
 exports.findCorreo = async (req, res) => {
     let result = {};
     try {
