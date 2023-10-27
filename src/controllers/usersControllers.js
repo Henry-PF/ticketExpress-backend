@@ -3,6 +3,9 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
+const process = require("process");
+const env = process.env
+
 
 exports.create = async (data) => {
     let result = {};
@@ -144,13 +147,11 @@ exports.login = async (data) => {
                 }
             }
         }).then((dta) => {
-            console.log('2', dta.usuarios[0]);
             if (dta) {
                 if (!bcrypt.compareSync(data.password, dta.usuarios[0].password)) {
                     throw new Error('Contraseña incorrecta');
                 } else {
-                    const secretKey = "mZ1IWqsOvcTD31fPsDLig8TZ7v8nkTTB";
-                    const token = jwt.sign({ userId: dta.usuarios[0].nick.id }, secretKey, {
+                    const token = jwt.sign({ userId: dta.usuarios[0].nick.id }, env.SECRECT_TOKEN, {
                         expiresIn: "1h",
                     });
                     result.data = dta;
@@ -160,7 +161,6 @@ exports.login = async (data) => {
                 result.error = "Usuario no registrado";
             }
         });
-
     } catch (error) {
         console.log(error)
         result.error = error.message;
