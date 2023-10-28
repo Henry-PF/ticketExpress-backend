@@ -47,20 +47,20 @@ exports.create = async (data) => {
             if (user) {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
-                // await sendEmail(
-                //     "Bienvenido a SmartPay ✔",
-                //     "<h1>Bienvenido a SmartPay</h1>",
-                //     `<p>Hola ${dtaPersona.nombre},</p>
-                //         <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
-                //     <p>
-                //     A continuación, encontrarás algunos detalles sobre tu cuenta:
-                //     </p>
-                //     <ul>
-                //         <li>Nombre de usuario: ${dataUser.usuario}</li>
-                //     </ul>
-                //     <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
-                //     <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
-                // );
+                await sendEmail(
+                    "Bienvenido a TicketExpress ✔",
+                    "<h1>Bienvenido a TicketExpress</h1>",
+                    `<p>Hola ${dtaPersona.nombre},</p>
+                        <p>Gracias por registrarte en TicketExpress, tu sitio web de compra de boleto mas seguro de argentina.</p>
+                    <p>
+                    A continuación, encontrarás algunos detalles sobre tu cuenta:
+                    </p>
+                    <ul>
+                        <li>Nombre de usuario: ${dataUser.usuario}</li>
+                    </ul>
+                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
+                    <p>¡Esperamos que disfrutes de tu experiencia con TicketExpress!</p>`
+                );
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
             } else {
@@ -205,7 +205,7 @@ exports.findEmail = async (data) => {
         if (data.email) {
             let dataUser = await datos.findOne({
                 where: {
-                    correo_electronico: {
+                    correo: {
                         [Op.eq]: data.email
                     }
                 },
@@ -223,6 +223,69 @@ exports.findEmail = async (data) => {
                 message: "falta el campo email"
             };
         }
+    } catch (error) {
+        console.log(error)
+        result.error = error.message;
+    }
+    return result;
+}
+
+const generarString = (longitud) => {
+    let result = "";
+    const abc = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "); // Espacios para convertir cara letra a un elemento de un array
+    for(i=0;i<=longitud;i++) {
+      const random = Math.floor(Math.random() * abc.length);
+      result += abc[random]
+    }
+    return result;
+  };
+exports.forgoPassword =  async (data)=>{
+    let result = {};
+    console.log(data);
+    try {
+        await datos.findOne({
+            include: [
+                {
+                    model: usuarios,
+                    include: { model: statud },
+                    where: {
+                        isactivo: {
+                            [Op.eq]: true
+                        }
+                    }
+                }
+            ],
+            where: {
+                correo: {
+                    [Op.eq]: data.correo
+                }
+            }
+        }).then(async (dta) => {
+            if (dta) {
+                let newPass =generarString(8);
+                let hashF = await bcrypt.hash(newPass, 10).then(hash => {
+                    return hash;
+                })
+                let updateDta= await usuarios.update({password:hashF},{
+                    where:{
+                        [Op.eq]: dta.usuarios.id
+                    }
+                });
+                if (updateDta) {
+                    await sendEmail(
+                        "TicketExpress",
+                        "<h1>Recuperacion de contraseña</h1>",
+                        `<p>Hola ${dta.nombre},</p>
+                            <p>Su nueva contraseña es: ${newPass}.</p>
+                        <p>`
+                    );
+                }
+                result.message = "Operacion Realizada con exito";
+            } else {
+                result.error = "Usuario no registrado";
+            }
+        });
+
     } catch (error) {
         console.log(error)
         result.error = error.message;
