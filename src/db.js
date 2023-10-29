@@ -53,8 +53,6 @@ fs.readdirSync(path.join(__dirname, "/models"))
 db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
 
 sequelize.models = initModels.initModels(sequelize);
-
-console.log(sequelize.models, 'SEQUELIZE.MODELS')
 module.exports = {
   ...sequelize.models,
   conn: sequelize,

@@ -10,9 +10,10 @@ const env = process.env
 exports.create = async (data) => {
     let result = {};
     let dataUser = data.body;
+    
     try {
         if (dataUser.data) {
-            let dta = JSON.parse(dataUser.data);
+            let dta = dataUser.data;
             let dtaPersona = {
                 nombre: dta.nombre,
                 apellido: dta.apellido,
@@ -23,11 +24,11 @@ exports.create = async (data) => {
                 telefono: dta.telefono,
                 googleId: dta.googleId
             }
-            let hashF = await bcrypt.hash(dta.password, 10).then(hash => {
+            let hashF = await bcrypt.hash(dataUser.password, 10).then(hash => {
                 return hash;
             })
             let dtaUsuario = {
-                nick: dta.nick,
+                nick: dataUser.nick,
                 password: hashF,
                 id_statud: "1",
                 type: "usuario",
@@ -48,6 +49,7 @@ exports.create = async (data) => {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
                 await sendEmail(
+                    dta.correo,
                     "Bienvenido a TicketExpress ✔",
                     "<h1>Bienvenido a TicketExpress</h1>",
                     `<p>Hola ${dtaPersona.nombre},</p>
@@ -71,7 +73,6 @@ exports.create = async (data) => {
             throw new Error("Error faltan datos para proceder con el registro");
         }
     } catch (error) {
-        console.log(error.message);
         result.error = error.message;
     }
     console.log(result);
@@ -273,6 +274,7 @@ exports.forgoPassword =  async (data)=>{
                 });
                 if (updateDta) {
                     await sendEmail(
+                        data.correo,
                         "TicketExpress",
                         "<h1>Recuperacion de contraseña</h1>",
                         `<p>Hola ${dta.nombre},</p>

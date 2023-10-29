@@ -9,7 +9,9 @@ const transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: env.mailer_user,
-        pass: env.mailer_pass
+        pass: env.mailer_pass,
+        clientId: env.mailer_clientId,
+        clientSecret: env.mailer_clientSecret
     }
 });
 
