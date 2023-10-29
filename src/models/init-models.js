@@ -17,6 +17,11 @@ var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
 
+var _asientos = require('./asientos')
+
+var _reserva = require("./reserva");
+
+
 function initModels(sequelize) {
   var datos = _datos(sequelize, DataTypes);
   var provincias = _provincias(sequelize, DataTypes);
@@ -35,6 +40,11 @@ function initModels(sequelize) {
   var pago_boletos = _pago_boletos(sequelize, DataTypes);
   var rutas_empresa = _rutas_empresa(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
+
+  var asientos = _asientos(sequelize, DataTypes)
+
+  var reserva = _reserva(sequelize, DataTypes);
+
 
   buses.belongsToMany(empresas, { through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
   buses.belongsToMany(rutas, { through: buses_rutas, foreignKey: "id_bus", otherKey: "id_ruta" });
@@ -99,7 +109,21 @@ function initModels(sequelize) {
   rutas.belongsTo(terminales, { foreignKey: "origen" });
   terminales.hasMany(rutas, { foreignKey: "origen" });
 
+  asientos.belongsTo(buses_rutas, { foreignKey: "id_buses" });
+  buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
+  asientos.belongsTo(buses_rutas, { foreignKey: "id_buses" });
+  buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
+
+  asientos.belongsTo(boletos, { foreignKey: "id_asiento" });
+  boletos.hasMany(asientos, { foreignKey: "id_asiento" });
+
+
+  usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
+  reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
+
+
   return {
+    asientos,
     boletos,
     buses,
     buses_empresa,
@@ -117,6 +141,7 @@ function initModels(sequelize) {
     statud,
     terminales,
     usuarios,
+    reserva,
   };
 }
 module.exports = initModels;

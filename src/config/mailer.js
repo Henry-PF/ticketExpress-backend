@@ -4,6 +4,7 @@ const process = require("process");
 const env = process.env;
 
 const transporter = nodemailer.createTransport({
+<<<<<<< HEAD
   host: "smtp.gmail.com",
   port: 465,
   secure: true,
@@ -11,16 +12,27 @@ const transporter = nodemailer.createTransport({
     user: env.mailer_user,
     pass: env.mailer_pass,
   },
+=======
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: env.mailer_user,
+        pass: env.mailer_pass,
+        clientId: env.mailer_clientId,
+        clientSecret: env.mailer_clientSecret
+    }
+>>>>>>> 5dfb2757d820139ee583684fb639dda7e4a91c64
 });
 
 const sendEmail = async (to, subject, text, html) => {
-  try {
-    const info = {
-      from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
-      to,
-      subject,
-      text,
-      html: `
+    try {
+        const info = {
+            from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
+            to,
+            subject,
+            text,
+            html: `
             <html>
             <head>
                 <style>
@@ -72,13 +84,13 @@ const sendEmail = async (to, subject, text, html) => {
             </body>
             </html>
         `,
-    };
+        };
 
-    const result = await transporter.sendMail(info);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+        const result = await transporter.sendMail(info);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 };
 
 module.exports = sendEmail;

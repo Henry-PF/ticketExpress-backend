@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('pasajeros', {
     id: {
       type: DataTypes.INTEGER,
@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'pasajeros',
     schema: 'public',
     timestamps: false,
-    
+
     indexes: [
       {
         name: "pasajeros_pkey",

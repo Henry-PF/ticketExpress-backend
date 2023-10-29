@@ -10,8 +10,8 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/config/config.json")[env];
 const { DB_URL } = process.env;
-const db = [];
 
+const db = [];
 
 let sequelize;
 if (config.use_env_variable) {
@@ -21,9 +21,9 @@ if (config.use_env_variable) {
       logging: false,
       native: false,
       dialectOptions: {
-        // ssl: {
-        //   require: 'true'
-        // }
+        //  ssl: {
+        //    require: 'true'
+        //  }
       }
     }
   );
@@ -35,7 +35,6 @@ if (config.use_env_variable) {
     config
   );
 }
-
 
 fs.readdirSync(path.join(__dirname, "/models"))
   .filter((file) => {
@@ -53,8 +52,6 @@ fs.readdirSync(path.join(__dirname, "/models"))
 db.forEach((modelName) => modelName(sequelize, Sequelize.DataTypes));
 
 sequelize.models = initModels.initModels(sequelize);
-
-console.log(sequelize.models, 'SEQUELIZE.MODELS')
 module.exports = {
   ...sequelize.models,
   conn: sequelize,
