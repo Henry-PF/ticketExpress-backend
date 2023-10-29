@@ -1,4 +1,5 @@
 const axios = require("axios");
+const sendEmail = require("../config/mailer.js");
 const {
   PAYPAL_API,
   PAYPAL_API_CLIENT,
@@ -69,20 +70,35 @@ const createOrder = async (req, res) => {
 const captureOrder = async (req, res) => {
   const { token } = req.query;
 
-  const response = await axios.post(
-    `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
-    {},
-    {
-      auth: {
-        username: PAYPAL_API_CLIENT,
-        password: PAYPAL_API_SECRET,
-      },
+  try {
+    const response = await axios.post(
+      `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+      {},
+      {
+        auth: {
+          username: PAYPAL_API_CLIENT,
+          password: PAYPAL_API_SECRET,
+        },
+      }
+    );
+    console.log(response.data);
+    // Verifico si fue exitosa la captura
+    if (response.data.status === "COMPLETED") {
+      //Enviaremos la notificacion del pago
+      /* const emailResult = await sendEmail(
+        "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
+        "Notificación de Pago",
+        "Has realizado con éxito la compra del siguiente ticket :"
+      );
+ */
+      console.log("Correo enviado: "/* , emailResult */);
     }
-  );
 
-  console.log(response.data);
-
-  return res.redirect("http://localhost:3000/");
+    return res.redirect("http://localhost:3000/");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Something goes wrong");
+  }
 };
 
 const cancelOrder = (req, res) => {
