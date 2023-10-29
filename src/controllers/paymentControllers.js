@@ -16,12 +16,18 @@ const createOrder = async (req, res) => {
             value: "300.00",
           },
           description: "bus ticket sales application",
+          
         },
       ],
       application_context: {
+        payment_method: {
+          payer_selected: "PAYPAL",
+          payee_preferred: "IMMEDIATE_PAYMENT_REQUIRED"
+        },
         brand_name: "ticketExpress.com",
         landing_page: "LOGIN",
         user_action: "PAY_NOW",
+        shipping_preference: "NO_SHIPPING",
         return_url: "http://localhost:3001/payment/capture-order",
         cancel_url: "http://localhost:3001/payment/cancel-order",
       },
@@ -50,10 +56,6 @@ const createOrder = async (req, res) => {
       `${PAYPAL_API}/v2/checkout/orders`,
       order,
       {
-        /* auth: {
-        username: PAYPAL_API_CLIENT,
-        password: PAYPAL_API_SECRET,
-      }, */
         headers: {
           Authorization: `Bearer ${access_token}`,
         },

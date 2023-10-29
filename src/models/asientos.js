@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'buses',
+        model: 'buses_rutas',
         key: 'id',
       },
     },
