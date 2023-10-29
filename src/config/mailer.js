@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: env.mailer_user,
         pass: env.mailer_pass,
-        clientId: "70581296445-v2s6fqgqf60dsp0p8vp7m5jopr332d01.apps.googleusercontent.com",
-        clientSecret: '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',
+        clientId: env.mailer_clientId,
+        clientSecret: env.mailer_clientSecret
     }
 });
 

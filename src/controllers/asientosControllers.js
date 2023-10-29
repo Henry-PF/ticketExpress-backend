@@ -1,8 +1,8 @@
-const Asientos = require('../db.js').asientos;
+const { asientos } = require('../db.js');
 
 const crearAsiento = async (nombre) => {
   try {
-    const nuevoAsiento = await Asientos.create({
+    const nuevoAsiento = await asientos.create({
       nombre: nombre.toString(), // Asegúrate de que sea una cadena
       disponibilidad: true, // Añade cualquier valor por defecto que necesites
       id_buses: 1, // Añade el ID del autobús
@@ -17,7 +17,7 @@ const crearAsiento = async (nombre) => {
 const obtenerAsientoID = async (req, res) => {
   try {
     const id = req.params.id;
-    const asiento = await Asientos.findByPk(id);
+    const asiento = await asientos.findByPk(id);
     if (!asiento) {
       return res.status(404).json({ error: 'Asiento no encontrado' });
     }
@@ -30,7 +30,7 @@ const obtenerAsientoID = async (req, res) => {
 const obtenerAsientos = async () => {
   let result = {};
   try {
-    const data = await Asientos.findAll();
+    const data = await asientos.findAll();
     result.data = data;
 
   } catch (error) {
@@ -44,7 +44,7 @@ const actualizarAsiento = async (req, res) => {
   try {
     const id = req.params.id;
     const { nombre, disponibilidad, id_buses } = req.body;
-    const asiento = await Asientos.findByPk(id);
+    const asiento = await asientos.findByPk(id);
     if (!asiento) {
       return res.status(404).json({ error: 'Asiento no encontrado' });
     }
@@ -61,7 +61,7 @@ const actualizarAsiento = async (req, res) => {
 const eliminarAsiento = async (req, res) => {
   try {
     const id = req.params.id;
-    const asiento = await Asientos.findByPk(id);
+    const asiento = await asientos.findByPk(id);
     if (!asiento) {
       return res.status(404).json({ error: 'Asiento no encontrado' });
     }

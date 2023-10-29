@@ -1,10 +1,11 @@
 const { Router } = require("express");
 const router = Router();
-const { login, Register } = require("../handlers/authHandler");
+const { login, Register, forgoPassword} = require("../handlers/authHandler");
 const passport = require("passport");
 
 router.post("/login", login);
 router.post("/register", Register);
+router.post("/forgoPassword", forgoPassword);
 
 router.get('/google',
     passport.authenticate('google', { scope: ['email', 'profile'] }));
