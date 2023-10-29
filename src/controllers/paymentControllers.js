@@ -85,13 +85,13 @@ const captureOrder = async (req, res) => {
     // Verifico si fue exitosa la captura
     if (response.data.status === "COMPLETED") {
       //Enviaremos la notificacion del pago
-      /* const emailResult = await sendEmail(
+      const emailResult = await sendEmail(
         "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
         "Notificación de Pago",
         "Has realizado con éxito la compra del siguiente ticket :"
       );
- */
-      console.log("Correo enviado: "/* , emailResult */);
+
+      console.log("Correo enviado: ", emailResult);
     }
 
     return res.redirect("http://localhost:3000/");
