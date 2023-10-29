@@ -31,6 +31,7 @@ function initModels(sequelize) {
   var rutas = _rutas(sequelize, DataTypes);
   var servicios = _servicios(sequelize, DataTypes);
   var empresas = _empresas(sequelize, DataTypes);
+  var asientos = _asientos(sequelize, DataTypes)
   var pasajeros = _pasajeros(sequelize, DataTypes);
   var boletos = _boletos(sequelize, DataTypes);
   var buses = _buses(sequelize, DataTypes);
@@ -41,7 +42,6 @@ function initModels(sequelize) {
   var rutas_empresa = _rutas_empresa(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
 
-  var asientos = _asientos(sequelize, DataTypes)
 
   var reserva = _reserva(sequelize, DataTypes);
 
