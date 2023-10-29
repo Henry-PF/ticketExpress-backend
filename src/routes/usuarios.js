@@ -4,10 +4,10 @@ const { findAll, findId, Userdelete, findCorreo, UserCreate } = require("../hand
 const { validateToken } = require("../middlewares/validateToken")
 
 router.post("/", UserCreate);
-router.post("/getUserCorreo", validateToken, findCorreo);
-router.get("/getAll", validateToken, findAll);
-router.get("/:id", validateToken, findId);
-router.post("/delete", validateToken, Userdelete);
+router.post("/getUserCorreo", findCorreo);
+router.get("/getAll", findAll);
+router.get("/:id", findId);
+router.post("/delete", Userdelete);
 
 
 module.exports = router;

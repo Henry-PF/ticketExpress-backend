@@ -40,28 +40,27 @@ const createOrder = async (req, res) => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         auth: {
-          username: PAYPAL_API_CLIENT,
-          password: PAYPAL_API_SECRET,
+          username: 'Ab3fo1dJ3hyDSILpbaYvlRDLHO9bVZwV_0fg-Mv0BKGT8xcyd255nu_6IAC3KTx1ll9IIP--QjIJ2_pA',
+          password: 'EI0uHYr_31_coCWAGIFpO6T4_zc86jM_EW_QlqafuxFFOJfi2CZaJqPslJ2e1Mf24XEpSZrkULpzwoJh',
         },
       }
     );
-
     const response = await axios.post(
-      `${PAYPAL_API}/v2/checkout/orders`,
+      `${PAYPAL_API}v2/checkout/orders`,
       order,
       {
-        /* auth: {
-        username: PAYPAL_API_CLIENT,
-        password: PAYPAL_API_SECRET,
-      }, */
+        // auth: {
+        //   username: 'Ab3fo1dJ3hyDSILpbaYvlRDLHO9bVZwV_0fg-Mv0BKGT8xcyd255nu_6IAC3KTx1ll9IIP--QjIJ2_pA',
+        //   password: 'EI0uHYr_31_coCWAGIFpO6T4_zc86jM_EW_QlqafuxFFOJfi2CZaJqPslJ2e1Mf24XEpSZrkULpzwoJh',
+        // },
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
       }
     );
-
-    res.json(response.data);
+    res.json(response);
   } catch (error) {
+    console.log(error);
     res.status(500).send("Something goes wrong");
   }
 };
@@ -70,7 +69,7 @@ const captureOrder = async (req, res) => {
   const { token } = req.query;
 
   const response = await axios.post(
-    `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+    `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
     {},
     {
       auth: {

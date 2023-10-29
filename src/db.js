@@ -9,44 +9,9 @@ const initModels = require("./models/init-models");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/config/config.json")[env];
-// const { DB_URL } = process.env;
-const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+const { DB_URL } = process.env;
 
 const db = [];
-
-
- let sequelize;
- if (config.use_env_variable) {
-   sequelize = new Sequelize(
-     DB_URL,
-     {
-       logging: false,
-       native: false,
-       dialectOptions: {
-         ssl: {
-           require: 'true'
-         }
-       }
-     }
-   );
- } else {
-   sequelize = new Sequelize(
-     config.database,
-     config.username,
-     config.password,
-     config
-   );
- }
-
-
-const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/buses`,
-  {
-    logging: false, // set to console.log to see the raw SQL queries
-    native: false, // lets Sequelize know we can use pg-native for ~30% more speed
-  }
-);
-
 
 let sequelize;
 if (config.use_env_variable) {
@@ -56,9 +21,9 @@ if (config.use_env_variable) {
       logging: false,
       native: false,
       dialectOptions: {
-        ssl: {
-          require: 'true'
-        }
+        //  ssl: {
+        //    require: 'true'
+        //  }
       }
     }
   );
@@ -70,7 +35,6 @@ if (config.use_env_variable) {
     config
   );
 }
-
 
 fs.readdirSync(path.join(__dirname, "/models"))
   .filter((file) => {

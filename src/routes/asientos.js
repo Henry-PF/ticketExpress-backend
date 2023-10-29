@@ -5,9 +5,9 @@ const router = Router();
 
 router.post("/", handleCrearAsiento);
 
-router.get("/:id",handleAsientoID );
+router.get("/:id", handleAsientoID);
 
-router.get("/",handleAsientos );
+router.get("/", handleAsientos);
 
 router.put("/:id", handleActualizacionAsiento);
 

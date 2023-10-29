@@ -9,18 +9,20 @@ const transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: env.mailer_user,
-        pass: env.mailer_pass
+        pass: env.mailer_pass,
+        clientId: "70581296445-v2s6fqgqf60dsp0p8vp7m5jopr332d01.apps.googleusercontent.com",
+        clientSecret: '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',
     }
 });
 
 const sendEmail = async (to, subject, text, html) => {
-  try {
-    const info = {
-      from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
-      to,
-      subject,
-      text,
-      html: `
+    try {
+        const info = {
+            from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
+            to,
+            subject,
+            text,
+            html: `
             <html>
             <head>
                 <style>
@@ -72,13 +74,13 @@ const sendEmail = async (to, subject, text, html) => {
             </body>
             </html>
         `,
-    };
+        };
 
-    const result = await transporter.sendMail(info);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+        const result = await transporter.sendMail(info);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 };
 
 module.exports = sendEmail;
