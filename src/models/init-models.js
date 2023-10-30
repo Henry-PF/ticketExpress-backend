@@ -113,6 +113,8 @@ function initModels(sequelize) {
   buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
   usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
   reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
+  usuarios.hasMany(review, { foreignKey: "id_user" });
+  review.belongsTo(usuarios, { foreignKey: "id_user" });
 
 //
   return {
