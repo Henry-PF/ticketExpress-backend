@@ -4,25 +4,26 @@ const process = require("process");
 const env = process.env;
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: env.mailer_user,
-        pass: env.mailer_pass,
-        clientId: env.mailer_clientId,
-        clientSecret: env.mailer_clientSecret
-    }
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  tls: { rejectUnauthorized: false },
+  auth: {
+    user: env.mailer_user,
+    pass: env.mailer_pass,
+    clientId: env.mailer_clientId,
+    clientSecret: env.mailer_clientSecret,
+  },
 });
 
 const sendEmail = async (to, subject, text, html) => {
-    try {
-        const info = {
-            from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
-            to,
-            subject,
-            text,
-            html: `
+  try {
+    const info = {
+      from: '"TicketExpress2000" <ticketexpress2000@gmail.com>',
+      to,
+      subject,
+      text,
+      html: `
             <html>
             <head>
                 <style>
@@ -74,13 +75,14 @@ const sendEmail = async (to, subject, text, html) => {
             </body>
             </html>
         `,
-        };
+    };
 
-        const result = await transporter.sendMail(info);
-        return result;
-    } catch (error) {
-        throw error;
-    }
+    const result = await transporter.sendMail(info);
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 module.exports = sendEmail;
