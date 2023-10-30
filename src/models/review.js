@@ -9,9 +9,13 @@ module.exports = function(sequelize, DataTypes) {
         autoIncrement: true,
         unique: true,
       },
-      nombre: {
-        type: DataTypes.STRING,
+      id_user:{
+        type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'usuarios',
+          key: 'id',
+        },
       },
       puntos: {
         type: DataTypes.STRING,
