@@ -16,6 +16,7 @@ var _servicios = require("./servicios");
 var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
+var _review = require("./review");
 
 var _asientos = require('./asientos')
 
@@ -29,22 +30,23 @@ function initModels(sequelize) {
   var ciudades = _ciudades(sequelize, DataTypes);
   var terminales = _terminales(sequelize, DataTypes);
   var rutas = _rutas(sequelize, DataTypes);
+  var buses = _buses(sequelize, DataTypes);
+  var buses_rutas = _buses_rutas(sequelize, DataTypes);
+  var asientos = _asientos(sequelize, DataTypes);
   var servicios = _servicios(sequelize, DataTypes);
   var empresas = _empresas(sequelize, DataTypes);
   var asientos = _asientos(sequelize, DataTypes)
   var pasajeros = _pasajeros(sequelize, DataTypes);
-  var boletos = _boletos(sequelize, DataTypes);
-  var buses = _buses(sequelize, DataTypes);
   var buses_empresa = _buses_empresa(sequelize, DataTypes);
-  var buses_rutas = _buses_rutas(sequelize, DataTypes);
   var buses_servicios = _buses_servicios(sequelize, DataTypes);
-  var pago_boletos = _pago_boletos(sequelize, DataTypes);
   var rutas_empresa = _rutas_empresa(sequelize, DataTypes);
+  var boletos = _boletos(sequelize, DataTypes);
+  var pago_boletos = _pago_boletos(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
-
-
   var reserva = _reserva(sequelize, DataTypes);
+  var review = _review(sequelize, DataTypes);
 
+  
 
   buses.belongsToMany(empresas, { through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
   buses.belongsToMany(rutas, { through: buses_rutas, foreignKey: "id_bus", otherKey: "id_ruta" });
@@ -108,40 +110,33 @@ function initModels(sequelize) {
   terminales.hasMany(rutas, { foreignKey: "destino" });
   rutas.belongsTo(terminales, { foreignKey: "origen" });
   terminales.hasMany(rutas, { foreignKey: "origen" });
-
   asientos.belongsTo(buses_rutas, { foreignKey: "id_buses" });
   buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
-  asientos.belongsTo(buses_rutas, { foreignKey: "id_buses" });
-  buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
-
-  asientos.belongsTo(boletos, { foreignKey: "id_asiento" });
-  boletos.hasMany(asientos, { foreignKey: "id_asiento" });
-
-
   usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
   reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
 
-
+//
   return {
-    asientos,
-    boletos,
-    buses,
-    buses_empresa,
-    buses_rutas,
-    buses_servicios,
-    ciudades,
     datos,
-    empresas,
-    pago_boletos,
-    pasajeros,
     provincias,
-    rutas,
-    rutas_empresa,
-    servicios,
     statud,
+    ciudades,
     terminales,
+    rutas,
+    buses,
+    buses_rutas,
+    servicios,
+    empresas,
+    pasajeros,
+    asientos,
+    buses_empresa,
+    buses_servicios,
+    rutas_empresa,
+    boletos,
+    pago_boletos,
     usuarios,
     reserva,
+    review
   };
 }
 module.exports = initModels;
