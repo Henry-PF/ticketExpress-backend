@@ -1,15 +1,27 @@
-const { empresas } = require("../db");
+const { empresas,datos } = require("../db");
 const { Op } = require("sequelize");
 
 exports.create = async (data) => {
     try {
-        const newEmpresa = await empresas.create({
-            id_datos: data.id_datos,
-            id_statud: data.id_statud
-        })
-
+        const datosEmpresas = datos.create({
+            nombre: data.nombre,
+            direccion: data.direccion,
+            telefono: data.telefono,
+            correo: data.correo,
+            cuit: data.cuit,
+        });
+        if(datosEmpresas){
+            const newEmpresa = await empresas.create({
+                id_datos: datosEmpresas.id,
+                id_statud: "1"
+            })
+            if(newEmpresa){
+                return { message: "empresa creada con éxito" };
+            }else{
+                return { error: "No se pudo crear la empresa" };
+            }
+        }
         return newEmpresa;
-
     } catch (error) {
         return console.log({ "error": error.message });
     }

@@ -258,16 +258,15 @@ const generarString = (longitud) => {
 };
 exports.forgoPassword = async (data) => {
     let result = {};
-    console.log(data);
     try {
         await datos.findOne({
             include: [
                 {
                     model: usuarios,
-                    include: { model: statud },
+                    attributes:['id','password'],
                     where: {
-                        isactivo: {
-                            [Op.eq]: true
+                        id_statud:{
+                            [Op.eq] : 1
                         }
                     }
                 }
@@ -285,15 +284,18 @@ exports.forgoPassword = async (data) => {
                 })
                 let updateDta = await usuarios.update({ password: hashF }, {
                     where: {
-                        [Op.eq]: dta.usuarios.id
+                        id:{
+                            [Op.eq]: dta.usuarios[0].dataValues.id
+                        }
                     }
                 });
                 if (updateDta) {
+
                     await sendEmail(
-                        data.correo,
+                        dta.correo,
                         "TicketExpress",
                         "<h1>Recuperacion de contraseña</h1>",
-                        `<p>Hola ${dta.nombre},</p>
+                        `<p>Hola ${dta.nombre} ${dta.apellido},</p>
                             <p>Su nueva contraseña es: ${newPass}.</p>
                         <p>`
                     );
