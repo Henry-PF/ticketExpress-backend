@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 exports.create = async (req, res) => {
     let result = {};
     let datos = req;
+    console.log(datos);
     try {
         let dataTerminalO = await terminales.findOne({
             where: {
@@ -69,7 +70,6 @@ exports.create = async (req, res) => {
 exports.update = async (datos, id) => {
     let result = {};
     try {
-
         let dataRutas = await rutas.update(datos, {
             where: { id: { [Op.eq]: id } }
         })
@@ -132,17 +132,21 @@ exports.getOne = async (where) => {
     }
     return result;
 }
-exports.deleteRuta = async (id) => {
+exports.deleteRuta = async (data) => {
     let result = {};
+    const {id, id_status} = data;
     try {
-
-        let dataRutas = await rutas.update({ id_statud: "8" }, {
+        let dataRutas = await rutas.update({ id_statud: id_status }, {
             where: { id: { [Op.eq]: id } }
         })
-        if (dataRutas) {
+        if (dataRutas && id_status === 2) {
             result.data = dataRutas;
             result.error = false;
             result.message = "Registro eliminado con éxito";
+        } else if(dataRutas && id_status === 1){
+            result.data = dataRutas;
+            result.error = false;
+            result.message = "Registro activado con éxito";
         } else {
             result.error = true;
             result.message = "No hay rutas registradas";

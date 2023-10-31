@@ -3,7 +3,7 @@ const { create, update, getAll, getId, getOne, deleteRuta, filterRoute } = requi
 exports.RutaDelete = async (req, res) => {
     let result = {};
     try {
-        result = await deleteRuta(req.body.id);
+        result = await deleteRuta(req.body);
         if (result) {
             res.status(200).json(result);
         }
@@ -15,7 +15,7 @@ exports.RutaDelete = async (req, res) => {
 exports.RutaUpdate = async (req, res) => {
     let result = {};
     try {
-        result = await update(req.body.DataUpdate, req.body.id);
+        result = await update(req.body, req.body.id);
         if (result) {
             res.status(200).json(result);
         }
