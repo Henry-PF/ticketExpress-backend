@@ -15,7 +15,7 @@ exports.RutaDelete = async (req, res) => {
 exports.RutaUpdate = async (req, res) => {
     let result = {};
     try {
-        result = await update(req.body.DataUpdate, req.body.id);
+        result = await update(req.body);
         if (result) {
             res.status(200).json(result);
         }

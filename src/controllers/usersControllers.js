@@ -80,14 +80,47 @@ exports.create = async (data) => {
 
 
 exports.update = async (data) => {
-    let result = {};
     try {
+        const usuario = await usuarios.findOne(
+            { where: { id_datos: { [Op.eq]: data.id } } }
+        );
+        if (usuario) {
+            await usuarios.update({
+                id_statud: data.id_statud
+            }, {
+                where: { id: usuario.id }
+            });
 
+            const dato = await datos.findOne({
+                where: {
+                    id: {
+                        [Op.eq]: usuario.id_datos
+                    }
+                }
+            });
+            if (dato) {
+                await datos.update({
+                    nombre: data.nombre,
+                    apellido: data.apellido,
+                    correo: data.correo,
+                    direccion: data.direccion,
+                    telefono: data.telefono,
+                    dni: data.dni,
+                }, {
+                    where: { id: dato.id }
+                });
+            }
+
+            return { message: "Datos actualizados con éxito" };
+        } else {
+            return { error: "No se pudo encontrar la empresa" };
+        }
     } catch (error) {
-        result.error = error.message;
+        console.error(error);
+        return { error: error.message };
     }
-    return result;
 }
+
 exports.findAll = async () => {
     let result = {};
     try {
@@ -247,10 +280,10 @@ exports.forgoPassword = async (data) => {
             include: [
                 {
                     model: usuarios,
-                    attributes:['id','password'],
+                    attributes: ['id', 'password'],
                     where: {
-                        id_statud:{
-                            [Op.eq] : 1
+                        id_statud: {
+                            [Op.eq]: 1
                         }
                     }
                 }
@@ -268,7 +301,7 @@ exports.forgoPassword = async (data) => {
                 })
                 let updateDta = await usuarios.update({ password: hashF }, {
                     where: {
-                        id:{
+                        id: {
                             [Op.eq]: dta.usuarios[0].dataValues.id
                         }
                     }

@@ -61,7 +61,6 @@ exports.getAll = async () => {
 }
 
 exports.deleteBus = async (data) => {
-    console.log(data);
     let result = {};
     try {
         let bus = await buses.findOne({

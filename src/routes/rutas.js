@@ -4,11 +4,11 @@ const { RutaUpdate, RutaCreate, RutagetAll, RutagetId, RutagetOne, RutaDelete, R
 const { validateToken } = require("../middlewares/validateToken");
 
 
+router.get("/getAll", RutagetAll);
 router.post("/", RutaCreate);
 router.post("/update", RutaUpdate);
 router.post("/getOne", RutagetOne);
 router.post("/delete", RutaDelete);
-router.get("/getAll", RutagetAll);
 router.get('/filter', RutaFiltro);
 router.get("/:id", RutagetId);
 

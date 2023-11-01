@@ -11,7 +11,7 @@ exports.create = async (data) => {
             correo: data.correo,
             cuit: data.cuit,
         });
-        console.log(datosEmpresas);
+
         if (datosEmpresas) {
             const newEmpresa = await empresas.create({
                 id_datos: datosEmpresas.id,
@@ -32,21 +32,41 @@ exports.create = async (data) => {
 exports.update = async (data) => {
     try {
         const empresa = await empresas.findOne(
-            { where: { id: { [Op.eq]: data.id } } }
+            { where: { id_datos: { [Op.eq]: data.id } } }
         );
-
         if (empresa) {
             await empresas.update({
-                id_datos: data.id_datos,
                 id_statud: data.id_statud
-            })
+            }, {
+                where: { id: empresa.id }
+            });
 
-            return { message: "empresa actualizada con éxito" };
+            const dato = await datos.findOne({
+                where: {
+                    id: {
+                        [Op.eq]: empresa.id_datos
+                    }
+                }
+            });
+            if (dato) {
+                await datos.update({
+                    nombre: data.nombre,
+                    direccion: data.direccion,
+                    correo: data.correo,
+                    telefono: data.telefono,
+                    cuit: data.cuit,
+                }, {
+                    where: { id: dato.id }
+                });
+            }
+
+            return { message: "Datos actualizados con éxito" };
         } else {
             return { error: "No se pudo encontrar la empresa" };
         }
     } catch (error) {
-        return console.log({ "error": error.message });
+        console.error(error);
+        return { error: error.message };
     }
 }
 
@@ -68,24 +88,26 @@ exports.getAll = async () => {
     return result;
 }
 
-exports.deleteEmpresa = async (empresaID) => {
+exports.deleteEmpresa = async (data) => {
+    console.log(data);
     let result = {};
     try {
         let empresaFound = await empresas.findOne({
             where: {
                 id: {
-                    [Op.eq]: empresaID
+                    [Op.eq]: parseInt(data.id)
                 }
             }
         });
         if (empresaFound) {
-            let empresaInactive = await empresas.update({ isactivo: false }, {
+            let empresaInactive = await empresas.update({ id_statud: parseInt(data.status) }, {
                 where: {
                     id: {
-                        [Op.eq]: empresaID
+                        [Op.eq]: parseInt(data.id)
                     }
                 }
             });
+            console.log(empresaInactive);
             if (empresaInactive) {
                 result.data = {
                     message: "empresa eliminada con exito"
@@ -94,6 +116,7 @@ exports.deleteEmpresa = async (empresaID) => {
         }
         return result;
     } catch (error) {
+        console.error(error);
         return console.log({ "error": error.message });
     }
 }
