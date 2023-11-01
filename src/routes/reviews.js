@@ -8,6 +8,6 @@ const {
 
 router.get("/get_reviews", findAll);
 router.post("/create_review", createReview);
-router.post("/delete_review/:id", deleteReview);
+router.delete("/delete_review/:id", deleteReview);
 
 module.exports = router;

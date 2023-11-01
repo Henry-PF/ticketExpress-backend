@@ -14,10 +14,10 @@ module.exports = function (sequelize, DataTypes) {
       id_user: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        /* references: {
+        references: {
           model: "usuarios",
           key: "id",
-        }, */
+        },
       },
       puntos: {
         type: DataTypes.STRING,
