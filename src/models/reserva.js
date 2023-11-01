@@ -6,21 +6,21 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true, 
         },
-        origen: {
-            type: DataTypes.STRING,
+        id_ruta: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            references: {
+              model: 'rutas',
+              key: 'id'
+            }
         },
-        destino: {
-            type: DataTypes.STRING,
+        id_user: {
+            type: DataTypes.INTEGER,
             allowNull: false,
-        },
-        partida: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        regreso: {
-            type: DataTypes.DATE,
-            allowNull: true,
+            references: {
+              model: 'usuarios',
+              key: 'id'
+            }
         },
         cantidadPasajeros: {
             type: DataTypes.INTEGER,
@@ -30,7 +30,23 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
-        viajeIda: {
+        viajeIdayVuelta: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
+        id_statud: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'statud',
+              key: 'id'
+            }
+        },
+        refPago: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        pagada: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
         }
