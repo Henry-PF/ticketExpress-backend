@@ -1,7 +1,9 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('review', {
+module.exports = function (sequelize, DataTypes) {
+  return sequelize.define(
+    "review",
+    {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -9,12 +11,12 @@ module.exports = function(sequelize, DataTypes) {
         autoIncrement: true,
         unique: true,
       },
-      id_user:{
+      id_user: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'usuarios',
-          key: 'id',
+          model: "usuarios",
+          key: "id",
         },
       },
       puntos: {
@@ -24,12 +26,13 @@ module.exports = function(sequelize, DataTypes) {
       contenido: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
-    },{
+      },
+    },
+    {
       sequelize,
-      tableName: 'review',
-      schema: 'public',
+      tableName: "review",
+      schema: "public",
       timestamps: false,
-    });
+    }
+  );
 };
-
