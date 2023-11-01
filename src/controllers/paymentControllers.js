@@ -100,11 +100,26 @@ const createOrder = async (req, res) => {
                 dataPasajeros.forEach(async (element) => {
                   let dataRegis = await datos.findOne({ where: { dni: { [Op.eq]: element.dni } } });
                   if (!dataRegis) {
-                    dataRegis = await datos.create(element);
+                    dataRegis = await datos.create({
+                      "nombre": element.nombre,
+                      "apellido": element.apellido,
+                      "correo": element.correo,
+                      "dni": element.dni,
+                      "cuit": element.cuit,
+                      "direccion": element.direccion,
+                      "telefono": element.telefono
+                    });
                   }
-                  let dtaPasajero = await pasajeros.create({ id_dato: dataRegis.id, id_status: "1" });
-                  if (dtaPasajero) {
-                    await pasajeros_reserva.create({ id_pasajero: dtaPasajero.id, id_reserva: dtaReserva.id });
+                  let dta_asiento = await asientos.findOne({ where: { id: { [Op.eq]: element.asiento } } });
+                  if (dta_asiento.disponibilidad == true) {
+                    let dtaPasajero = await pasajeros.create({ id_dato: dataRegis.id, id_asiento: element.asiento, id_status: "1" });
+                    if (dtaPasajero) {
+                      await pasajeros_reserva.create({ id_pasajero: dtaPasajero.id, id_reserva: dtaReserva.id });
+                    }
+                    dta_asiento.disponibilidad = false;
+                    await dta_asiento.save();
+                  } else {
+                    res.status(401).json({ message: "asiento no disponible" })
                   }
                 });
               }
@@ -131,32 +146,45 @@ const captureOrder = async (req, res) => {
   const { token } = req.query;
 
   try {
-    const response = await axios.post(
-      `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
-      {},
-      {
-        auth: {
-          username: PAYPAL_API_CLIENT,
-          password: PAYPAL_API_SECRET,
-        },
+    let dtaReserva = await reservas.findOne({ where: { refPago: { [Op.eq]: token } } });
+    if (dtaReserva) {
+      const response = await axios.post(
+        `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+        {},
+        {
+          auth: {
+            username: PAYPAL_API_CLIENT,
+            password: PAYPAL_API_SECRET,
+          },
+        }
+      );
+      // Verifico si fue exitosa la captura
+      if (response.data.status === "COMPLETED") {
+        dtaReserva.pagada = true;
+        await dtaReserva.save();
+        let dtaPasajero = await pasajeros_reserva.findAll({
+          where: {
+            id_reserva: {
+              [Op.eq]: dtaReserva.id
+            }
+          }
+        });
+
+        //Enviaremos la notificacion del pago
+        /*const emailResult = await sendEmail(
+          "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
+          "Notificación de Pago",
+          "Has realizado con éxito la compra del siguiente ticket :"
+        );*/
+
+        console.log("Correo enviado: ", emailResult);
       }
-    );
+    } else {
+      res.status(401).json({ message: "ruta no encontrada" })
+    }
 
-    // Verifico si fue exitosa la captura
-    // if (response.data.status === "COMPLETED") {
-    //   //Enviaremos la notificacion del pago
-    //   const emailResult = await sendEmail(
-    //     "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
-    //     "Notificación de Pago",
-    //     "Has realizado con éxito la compra del siguiente ticket :"
-    //   );
 
-    //   console.log("Correo enviado: ", emailResult);
-    // }
-    res.redirect('http://localhost:3000/');
-    console.log(response.data);
-    return res.status(200).json(response.data);
-    // return res.status(200).redirect("http://localhost:3000/");
+    return res.redirect("http://localhost:3000/");
   } catch (error) {
     console.error(error);
     return res.status(500).send("Something goes wrong");
