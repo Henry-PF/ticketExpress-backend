@@ -32,6 +32,15 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'asientos',
     schema: 'public',
     timestamps: false,
+    indexes: [
+      {
+        name: "asientos_pkey",
+        unique: true,
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
   });
 };
 

@@ -17,10 +17,9 @@ var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
 var _review = require("./review");
-
-var _asientos = require('./asientos')
-
+var _asientos = require('./asientos');
 var _reserva = require("./reserva");
+var _pasajeros_reserva = require("./pasajeros_reserva");
 
 
 function initModels(sequelize) {
@@ -44,6 +43,7 @@ function initModels(sequelize) {
   var usuarios = _usuarios(sequelize, DataTypes);
   var reserva = _reserva(sequelize, DataTypes);
   var review = _review(sequelize, DataTypes);
+  var pasajeros_reserva = _pasajeros_reserva(sequelize, DataTypes);
 
   
 
@@ -95,8 +95,6 @@ function initModels(sequelize) {
   statud.hasMany(buses, { foreignKey: "id_statud" });
   empresas.belongsTo(statud, { foreignKey: "id_statud" });
   statud.hasMany(empresas, { foreignKey: "id_statud" });
-  pasajeros.belongsTo(statud, { foreignKey: "id_statud" });
-  statud.hasMany(pasajeros, { foreignKey: "id_statud" });
   rutas.belongsTo(statud, { foreignKey: "id_statud" });
   statud.hasMany(rutas, { foreignKey: "id_statud" });
   servicios.belongsTo(statud, { foreignKey: "id_statud" });
@@ -116,7 +114,18 @@ function initModels(sequelize) {
   usuarios.hasMany(review, { foreignKey: "id_user" });
   review.belongsTo(usuarios, { foreignKey: "id_user" });
 
-//
+  pasajeros.belongsTo(statud, { foreignKey: "id_statud" });
+  statud.hasMany(pasajeros, { foreignKey: "id_statud" });
+
+  asientos.belongsTo(pasajeros, { foreignKey: "id_asiento" });
+  pasajeros.hasMany(asientos, { foreignKey: "id_asiento" });
+  
+  pasajeros_reserva.belongsTo(reserva,{foreignKey:"id_reserva"})
+  reserva.hasMany(pasajeros_reserva,{foreignKey:"id_reserva"})
+  
+  pasajeros_reserva.belongsTo(pasajeros,{foreignKey:"id_pasajero"})
+  pasajeros.hasMany(pasajeros_reserva,{foreignKey:"id_pasajero"})
+
   return {
     datos,
     provincias,
@@ -137,7 +146,8 @@ function initModels(sequelize) {
     pago_boletos,
     usuarios,
     reserva,
-    review
+    review,
+    pasajeros_reserva
   };
 }
 module.exports = initModels;
