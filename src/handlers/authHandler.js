@@ -27,9 +27,10 @@ exports.Register = async (req, res) => {
 }
 
 exports.forgoPassword = async (req, res) => {
+
     let result = {};
     try {
-        result = await forgoPassword(req);
+        result = await forgoPassword(req.body);
         if (result) {
             res.status(200).json(result);
         }

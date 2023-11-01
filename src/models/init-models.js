@@ -16,6 +16,7 @@ var _servicios = require("./servicios");
 var _statud = require("./statud");
 var _terminales = require("./terminales");
 var _usuarios = require("./usuarios");
+var _review = require("./review");
 
 var _asientos = require('./asientos')
 
@@ -42,6 +43,9 @@ function initModels(sequelize) {
   var pago_boletos = _pago_boletos(sequelize, DataTypes);
   var usuarios = _usuarios(sequelize, DataTypes);
   var reserva = _reserva(sequelize, DataTypes);
+  var review = _review(sequelize, DataTypes);
+
+  
 
   buses.belongsToMany(empresas, { through: buses_empresa, foreignKey: "id_bus", otherKey: "id_empresa" });
   buses.belongsToMany(rutas, { through: buses_rutas, foreignKey: "id_bus", otherKey: "id_ruta" });
@@ -109,6 +113,8 @@ function initModels(sequelize) {
   buses_rutas.hasMany(asientos, { foreignKey: "id_buses" });
   usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
   reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
+  usuarios.hasMany(review, { foreignKey: "id_user" });
+  review.belongsTo(usuarios, { foreignKey: "id_user" });
 
 //
   return {
@@ -130,7 +136,8 @@ function initModels(sequelize) {
     boletos,
     pago_boletos,
     usuarios,
-    reserva
+    reserva,
+    review
   };
 }
 module.exports = initModels;
