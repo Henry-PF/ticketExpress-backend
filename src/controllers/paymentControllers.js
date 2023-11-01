@@ -109,6 +109,7 @@ const createOrder = async (req, res) => {
                 });
               }
             }
+            res.json(response.data); 
           }else{
             res.status(401).json({message: "ruta no encontrada"})
           }
@@ -116,9 +117,6 @@ const createOrder = async (req, res) => {
       }else{
         res.status(401).json({message: "usuario no encontrado"})
       }
-      
-      
-      res.json(response.data);  
     }else{
       return res.status(401).json({message: "No data provided"})
     }
