@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const routes = require("./routes/index.js");
 const passport = require("passport");
+var path = require('path');
 
 const fileupload = require("express-fileupload");
 
@@ -48,7 +49,7 @@ server.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   next();
 });
-
+server.use(express.static(path.join(__dirname, 'public')))
 server.use("/", routes);
 
 server.use((err, req, res, next) => {
