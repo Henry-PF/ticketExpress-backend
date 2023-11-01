@@ -2,9 +2,9 @@ const { crearAsiento, obtenerAsientoID, obtenerAsientos, actualizarAsiento, elim
 
 const handleCrearAsiento = async (req, res) => {
   try {
-    const { nombre, id_buses } = req.body; // Asegúrate de obtener los datos necesarios del cuerpo de la solicitud
-    const nuevoAsiento = await crearAsiento(nombre, id_buses); // Llama a la función crearAsiento con los datos
-    res.status(201).json({ message: 'Asiento creado con éxito', asiento: nuevoAsiento });
+    const { asiento } = req.body; // Asegúrate de obtener los datos necesarios del cuerpo de la solicitud
+    const nuevoAsiento = await crearAsiento(asiento); // Llama a la función crearAsiento con los datos
+    res.status(200).json({ message: 'Asiento creado con éxito', asiento: nuevoAsiento });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

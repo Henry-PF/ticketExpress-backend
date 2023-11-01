@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('asientos', {
     id: {
       type: DataTypes.INTEGER,
@@ -9,14 +9,18 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       unique: true,
     },
-    nombre: {
+    asiento: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    disponibilidad: {
+    reservado: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
+    },
+    tiempo_expiracion: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW
     },
     id_buses: {
       type: DataTypes.INTEGER,
@@ -26,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id',
       },
     },
-   
+
   }, {
     sequelize,
     tableName: 'asientos',

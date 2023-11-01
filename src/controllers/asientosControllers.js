@@ -1,12 +1,18 @@
 const { asientos } = require('../db.js');
 
-const crearAsiento = async (nombre) => {
+const crearAsiento = async (asiento) => {
+  console.log(asiento);
   try {
+    const tiempoExpiracion = new Date();
+    tiempoExpiracion.setMinutes(tiempoExpiracion.getMinutes() + 10); // 10 minutos de expiración
+
     const nuevoAsiento = await asientos.create({
-      nombre: nombre.toString(), // Asegúrate de que sea una cadena
-      disponibilidad: true, // Añade cualquier valor por defecto que necesites
-      id_buses: 1, // Añade el ID del autobús
+      asiento: asiento.toString(),
+      reservado: true,
+      tiempo_expiracion: tiempoExpiracion,
+      id_buses: 1,
     });
+
     return nuevoAsiento;
   } catch (error) {
     console.error(error);

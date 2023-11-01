@@ -1,19 +1,34 @@
-const { empresas } = require("../db");
+const { empresas, datos, statud } = require("../db");
 const { Op } = require("sequelize");
 
 exports.create = async (data) => {
+    console.log(data);
     try {
-        const newEmpresa = await empresas.create({
-            id_datos: data.id_datos,
-            id_statud: data.id_statud
-        })
-
+        const datosEmpresas = await datos.create({
+            nombre: data.nombre,
+            direccion: data.direccion,
+            telefono: data.telefono,
+            correo: data.correo,
+            cuit: data.cuit,
+        });
+        console.log(datosEmpresas);
+        if (datosEmpresas) {
+            const newEmpresa = await empresas.create({
+                id_datos: datosEmpresas.id,
+                id_statud: "1"
+            })
+            if (newEmpresa) {
+                return { message: "empresa creada con éxito" };
+            } else {
+                return { error: "No se pudo crear la empresa" };
+            }
+        }
         return newEmpresa;
-
     } catch (error) {
         return console.log({ "error": error.message });
     }
 }
+
 exports.update = async (data) => {
     try {
         const empresa = await empresas.findOne(
@@ -36,12 +51,21 @@ exports.update = async (data) => {
 }
 
 exports.getAll = async () => {
+    let result = {};
     try {
-        const data = await empresas.findAll();
-        return data
+        const data = await empresas.findAll({
+            include: [
+                { model: datos, as: 'dato' },
+                { model: statud, as: 'statud' }
+            ]
+        });
+        result.data = data;
+
     } catch (error) {
-        return console.log({ "error": error.message });
+        console.log(error);
+        result.error = error.message;
     }
+    return result;
 }
 
 exports.deleteEmpresa = async (empresaID) => {

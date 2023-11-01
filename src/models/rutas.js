@@ -31,10 +31,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    fecha_salida: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     hora_llegada: {
       type: DataTypes.STRING,
       allowNull: false

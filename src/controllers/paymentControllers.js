@@ -61,7 +61,7 @@ const createOrder = async (req, res) => {
         },
       }
     );
-    res.json(response);
+    res.status(200).json(response.data);
   } catch (error) {
     console.log(error);
     res.status(500).send("Something goes wrong");
@@ -73,7 +73,7 @@ const captureOrder = async (req, res) => {
 
   try {
     const response = await axios.post(
-      `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+      `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
       {},
       {
         auth: {
@@ -82,20 +82,22 @@ const captureOrder = async (req, res) => {
         },
       }
     );
-    console.log(response.data);
+
     // Verifico si fue exitosa la captura
-    if (response.data.status === "COMPLETED") {
-      //Enviaremos la notificacion del pago
-      const emailResult = await sendEmail(
-        "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
-        "Notificación de Pago",
-        "Has realizado con éxito la compra del siguiente ticket :"
-      );
+    // if (response.data.status === "COMPLETED") {
+    //   //Enviaremos la notificacion del pago
+    //   const emailResult = await sendEmail(
+    //     "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
+    //     "Notificación de Pago",
+    //     "Has realizado con éxito la compra del siguiente ticket :"
+    //   );
 
-      console.log("Correo enviado: ", emailResult);
-    }
-
-    return res.redirect("http://localhost:3000/");
+    //   console.log("Correo enviado: ", emailResult);
+    // }
+    res.redirect('http://localhost:3000/');
+    console.log(response.data);
+    return res.status(200).json(response.data);
+    // return res.status(200).redirect("http://localhost:3000/");
   } catch (error) {
     console.error(error);
     return res.status(500).send("Something goes wrong");
