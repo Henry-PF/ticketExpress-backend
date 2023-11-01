@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { reservas,datos,pasajeros,boletos,rutas,asientos,buses_rutas,usuarios,pasajeros_reserva} = require('../db.js');
+const { reserva,datos,pasajeros,boletos,rutas,buses_rutas,usuarios,pasajeros_reserva} = require('../db.js');
 const { Op } = require("sequelize");
 const sendEmail = require("../config/mailer.js");
 const {
@@ -15,7 +15,7 @@ const createOrder = async (req, res) => {
     if (body) {
       let dta_User = await usuarios.findOne({where:{id:{[Op.eq]:body.id_user}}});
       if(dta_User){
-        let dtaReserva = await reservas.findOne({
+        let dtaReserva = await reserva.findOne({
           where:{
             id_user:{
               [Op.eq]:dta_User.id
@@ -84,7 +84,7 @@ const createOrder = async (req, res) => {
 
             let dtaPaypal=response.data;
 
-            dtaReserva = await reservas.create({
+            dtaReserva = await reserva.create({
               id_ruta:dta_ruta.id,
               id_user:dta_User.id,
               cantidadPasajeros:dataPasajeros.length ,
@@ -92,14 +92,17 @@ const createOrder = async (req, res) => {
               viajeIdayVuelta:body.viajeIdayVuelta,
               id_statud:1,
               pagada:false,
-              refPago:dtaPaypal.id
+              refPago:""
             })
 
             if (dtaReserva){
               if (dataPasajeros.length > 0){
                 dataPasajeros.forEach(async (element) => {
                   let dataRegis = await datos.findOne({where:{dni:{[Op.eq]:element.dni}}});
-                  if(!dataRegis){
+                  let idDatos = 0;
+                  if(dataRegis){
+                    idDatos = dataRegis.dataValues.id;
+                  }else{
                     dataRegis = await datos.create({
                       "nombre": element.nombre,
                       "apellido": element.apellido,
@@ -109,22 +112,25 @@ const createOrder = async (req, res) => {
                       "direccion":element.direccion,
                       "telefono":element.telefono 
                     });
+                    idDatos = dataRegis.dataValues.id;
                   }
-                  let dta_asiento = await asientos.findOne({where:{id:{[Op.eq]:element.asiento}}});
-                  if (dta_asiento.disponibilidad == true) {
-                    let dtaPasajero = await pasajeros.create({id_dato:dataRegis.id,id_asiento:element.asiento,id_status:"1"}); 
-                    if (dtaPasajero) {
-                      await pasajeros_reserva.create({id_pasajero:dtaPasajero.id,id_reserva:dtaReserva.id});
+                  if(element.asiento){
+                    let vrfAsiento =await pasajeros.findOne({where:{asiento:{[Op.eq]:element.asiento}}});
+                    if (!vrfAsiento) {
+                      let dtaPasajero = await pasajeros.create({id_datos:idDatos,asiento:element.asiento,id_statud:1}); 
+                      if (dtaPasajero) {
+                        await pasajeros_reserva.create({id_pasajero:dtaPasajero.id,id_reserva:dtaReserva.id});
+                      }
+                    }else{
+                      res.status(401).json({message: "asiento no disponible"})
                     }
-                    dta_asiento.disponibilidad = false;
-                    await dta_asiento.save();
                   }else{
-                    res.status(401).json({message: "asiento no disponible"})
+                    res.status(401).json({message: "pasajero sin asiento asignado"})
                   }
                 });
               }
             }
-            res.json(response.data); 
+            res.json(""); 
           }else{
             res.status(401).json({message: "ruta no encontrada"})
           }
@@ -146,7 +152,7 @@ const captureOrder = async (req, res) => {
   const { token } = req.query;
 
   try {
-    let dtaReserva = await reservas.findOne({where:{refPago:{[Op.eq]:token}}});
+    let dtaReserva = await reserva.findOne({where:{refPago:{[Op.eq]:token}}});
     if(dtaReserva){
       const response = await axios.post(
         `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
