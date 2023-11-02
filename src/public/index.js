@@ -12,9 +12,22 @@ exports.createBoletoPDF = async (dni,data)=>{
         doc.pipe(fs.createWriteStream(path.join(__dirname,'boletos',`boleto_${dni}.pdf`)));
         doc
         .image(path.join(__dirname,'img',`logo.png`), {fit: [250, 125],align: 'left',valign: 'center'})
+        .image(path.join(__dirname,'img',`logo.png`), {fit: [250, 125],align: 'right',valign: 'center'})
+        .fontSize(24) 
+        .text("Boleto de bus", 300, 100)
+        .fontSize(16) 
+        .text("Datos del pasajero: ", 250, 320)
         .fontSize(12) 
-        .text(data, 300, 100); 
-        doc.end();
+        .text("Nombre: ", 250, 350)
+        .text("Apellido: ", 250, 360)
+        .text("Dni: ", 250,370)
+        .text("Direccion: ", 250,380)
+        .text("Telefono: ", 250,390)
+        .fontSize(16) 
+        .text("Datos de la ruta: ", 250, 420)
+        .fontSize(16) 
+        .text("Datos del Bus: ", 250, 520)
+        .end();
     } catch (error) {
         console.log(error)
     }
