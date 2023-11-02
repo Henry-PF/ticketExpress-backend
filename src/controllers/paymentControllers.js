@@ -43,8 +43,8 @@ const createOrder = async (req, res) => {
               landing_page: "LOGIN",
               user_action: "PAY_NOW",
               shipping_preference: "NO_SHIPPING",
-              return_url: "http://localhost:3001/payment/capture-order",
-              cancel_url: "http://localhost:3001/payment/cancel-order",
+              return_url: "https://api-54nh.onrender.com/payment/capture-order",
+              cancel_url: "https://api-54nh.onrender.com/payment/cancel-order",
             },
           };
 
