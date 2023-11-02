@@ -2,11 +2,10 @@ const { buses, statud } = require('../db')
 const { Op } = require('sequelize');
 
 exports.create = async (data) => {
-    let dataBus = data.body;
+    let dataBus = data;
 
     try {
         const newBus = await buses.create({
-            id: dataBus.id,
             modelo: dataBus.modelo,
             marca: dataBus.marca,
             placa: dataBus.placa,
@@ -61,21 +60,21 @@ exports.getAll = async () => {
     return result;
 }
 
-exports.deleteBus = async (id) => {
+exports.deleteBus = async (data) => {
     let result = {};
     try {
         let bus = await buses.findOne({
             where: {
                 id: {
-                    [Op.eq]: id
+                    [Op.eq]: parseInt(data.id)
                 }
             }
         });
         if (bus) {
-            let updatedBus = await buses.update({ isactivo: false }, {
+            let updatedBus = await buses.update({ id_statud: parseInt(data.status) }, {
                 where: {
                     id: {
-                        [Op.eq]: id
+                        [Op.eq]: parseInt(data.id)
                     }
                 }
             });

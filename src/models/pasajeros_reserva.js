@@ -1,44 +1,37 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
-  return sequelize.define('pasajeros', {
-    id: {
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('pasajeros_reserva', {
+    id_reserva: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
-    },
-    id_datos: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
-        model: 'datos',
+        model: 'reserva',
         key: 'id'
       }
     },
-    asiento: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    id_statud: {
+    id_pasajero: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
-        model: 'statud',
+        model: 'pasajeros',
         key: 'id'
       }
     }
   }, {
     sequelize,
-    tableName: 'pasajeros',
+    tableName: 'pasajeros_reserva',
     schema: 'public',
     timestamps: false,
-
+    
     indexes: [
       {
-        name: "pasajeros_pkey",
+        name: "pasajeros_reserva_pkey",
         unique: true,
         fields: [
-          { name: "id" },
+          { name: "id_reserva" },
+          { name: "id_pasajero" },
         ]
       },
     ]

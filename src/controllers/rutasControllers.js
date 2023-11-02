@@ -1,9 +1,10 @@
-const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa } = require("../db");
+const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa, buses_rutas } = require("../db");
 const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
     let result = {};
     let datos = req;
+    console.log(datos);
     try {
         let dataTerminalO = await terminales.findOne({
             where: {
@@ -39,13 +40,14 @@ exports.create = async (req, res) => {
                     "destino": dataTerminalD.id,
                     "precio": datos.precio,
                     "fecha_salida": datos.fecha_salida,
+                    "fecha_llegada": datos.fecha_llegada,
                     "hora_llegada": datos.hora_llegada,
                     "hora_salida": datos.hora_salida,
                     "id_statud": datos.statud,
                 }
                 let newRuta = await rutas.create(DatanewRuta);
                 if (newRuta) {
-                    //await rutas_empresa.create({"id_ruta":newRuta.id,"id_empresa":dataEmpresa.id});
+                    await buses_rutas.create({ "id_ruta": newRuta.id, "id_bus": datos.bus, "capacidad_disponible": datos.capacidad });
                     result.data = newRuta;
                     result.message = "Ruta registrado con éxito";
                 } else {
@@ -66,12 +68,17 @@ exports.create = async (req, res) => {
     return result;
 }
 
-exports.update = async (datos, id) => {
+exports.update = async (datos) => {
+    console.log(datos);
     let result = {};
     try {
 
-        let dataRutas = await rutas.update(datos, {
-            where: { id: { [Op.eq]: id } }
+        let dataRutas = await rutas.update({
+            hora_llegada: datos.hora_llegada,
+            hora_salida: datos.hora_salida,
+            precio: datos.precio,
+        }, {
+            where: { id: { [Op.eq]: datos.id } }
         })
         if (dataRutas) {
             result.data = dataRutas;
@@ -92,7 +99,6 @@ exports.getAll = async () => {
     try {
 
         let dataRutas = await rutas.findAll({
-            attributes: { exclude: ['createdAt', 'updatedAt'] },
             include: [{ model: terminales }]
         })
         if (dataRutas) {
@@ -104,11 +110,11 @@ exports.getAll = async () => {
             result.message = "No hay rutas registradas";
         }
     } catch (error) {
-
         console.log('Error', error);
     }
     return result;
 }
+
 exports.getOne = async (where) => {
     let result = {};
     try {

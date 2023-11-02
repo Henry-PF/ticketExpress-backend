@@ -16,8 +16,12 @@ exports.UserCreate = async (req, res) => {
 exports.UserUpdate = async (req, res) => {
     let result = {};
     try {
-
+        result = await update(req.body)
+        if (result) {
+            res.status(200).json(result);
+        }
     } catch (error) {
+        console.error(error);
         return res.status(500).json({ error: { message: "Error al actualizar el usuario." } });
     }
 }
@@ -61,7 +65,7 @@ exports.findCorreo = async (req, res) => {
 exports.Userdelete = async (req, res) => {
     let result = {};
     try {
-        result = await Delete(req.body.id);
+        result = await Delete(req.body);
         if (result) {
             res.status(200).json(result);
         }

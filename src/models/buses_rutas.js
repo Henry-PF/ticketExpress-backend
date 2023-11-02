@@ -1,6 +1,13 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('buses_rutas', {
+    id:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      unique:true,
+      autoIncrement: true
+    },
     id_bus: {
       type: DataTypes.INTEGER,
       allowNull: false,

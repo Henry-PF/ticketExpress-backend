@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-    fecha_salida: {
+    fecha_llegada: {
       type: DataTypes.STRING,
       allowNull: false
     },
