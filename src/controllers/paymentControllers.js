@@ -1,7 +1,8 @@
 const axios = require("axios");
-const { reserva, datos, pasajeros, boletos, rutas, buses_rutas, usuarios, pasajeros_reserva } = require('../db.js');
+const { reserva, datos, pasajeros, boletos, rutas, buses_rutas, usuarios, pasajeros_reserva, rutas_empresa, empresas } = require('../db.js');
 const { Op } = require("sequelize");
-const sendEmail = require("../config/mailer.js");
+const { sendEmail, sendEmailAttachments } = require("../config/mailer.js");
+const { createBoletoPDF } = require("../public/index.js");
 const {
   PAYPAL_API,
   PAYPAL_API_CLIENT,
@@ -23,7 +24,7 @@ const createOrder = async (req, res) => {
             id_statud: 1
           }
         });
-        if (dtaReserva) {
+        if (!dtaReserva) {
           res.status(401).json({ message: "usted posee una reserva activa" })
         } else {
           let dta_ruta = await rutas.findOne({ where: { id: { [Op.eq]: body.id_ruta } } });
@@ -92,7 +93,7 @@ const createOrder = async (req, res) => {
               viajeIdayVuelta: body.viajeIdayVuelta,
               id_statud: 1,
               pagada: false,
-              refPago: ""
+              refPago: dtaPaypal.id
             })
 
             if (dtaReserva) {
@@ -130,7 +131,7 @@ const createOrder = async (req, res) => {
                 });
               }
             }
-            res.json("");
+            res.json(response.data);
           } else {
             res.status(401).json({ message: "ruta no encontrada" })
           }
@@ -152,48 +153,112 @@ const captureOrder = async (req, res) => {
   const { token } = req.query;
 
   try {
-    let dtaReserva = await reserva.findOne({ where: { refPago: { [Op.eq]: token } } });
+    let dtaReserva = await reserva.findOne({
+      attributes: { exclude: ['id', 'id_ruta', 'id_user', 'id_statud', 'usuarioId'] },
+      include: [
+        {
+          attributes: { exclude: ['id', 'id_statud'] },
+          model: rutas,
+          include: [{
+            model: rutas_empresa,
+            include: {
+              attributes: { exclude: ['id', 'id_datos', 'id_statud'] },
+              model: empresas,
+              include: {
+                attributes: { exclude: ['id'] },
+                model: datos
+              }
+            }
+          }]
+        },
+        {
+          model: pasajeros_reserva,
+          attributes: { exclude: ['id_pasajero'] },
+          include: [
+            {
+              model: pasajeros,
+              attributes: { exclude: ['id_datos', 'id_statud'] },
+              include: {
+                attributes: { exclude: ['id'] },
+                model: datos
+              }
+            }
+          ]
+        }
+      ],
+      where: {
+        refPago: {
+          [Op.eq]: token
+        }
+      }
+    });
     if (dtaReserva) {
-      const response = await axios.post(
-        `${PAYPAL_API}/v2/checkout/orders/${token}/capture`,
+      let dtaPasajero = dtaReserva.pasajeros_reservas;
+      let dtaBoletos = []
+      dtaPasajero.forEach(async (element) => {
+        let dtaBoleto = {
+          id_ruta: dtaReserva.ruta.rutas_empresas[0].id_ruta,
+          id_statud: 1,
+          id_empresa: dtaReserva.ruta.rutas_empresas[0].id_empresa,
+          id_pasajero: element.pasajero.id,
+          costo: parseFloat(dtaReserva.precio) / dtaReserva.cantidadPasajeros,
+          fecha: new Date().toLocaleString()
+        }
+        let newBoleto = await boletos.create(dtaBoleto);
+        if (newBoleto) {
+          await createBoletoPDF(element.pasajero.dato.dni, "<h1>hola</h1>");
+          // sendEmailAttachments(element.pasajero.dato.correo,"Boleto de bus","","",)
+        }
+        dtaBoletos.push(dtaBoleto)
+      })
+
+      if (dtaReserva) {
+        res.json({ "dtaReserva": dtaReserva, "dtaBoleto": dtaBoletos })
+      }
+
+
+      /*const response = await axios.post(
+        `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
         {},
         {
           auth: {
-            username: PAYPAL_API_CLIENT,
-            password: PAYPAL_API_SECRET,
+            username: 'Ab3fo1dJ3hyDSILpbaYvlRDLHO9bVZwV_0fg-Mv0BKGT8xcyd255nu_6IAC3KTx1ll9IIP--QjIJ2_pA',
+            password: 'EI0uHYr_31_coCWAGIFpO6T4_zc86jM_EW_QlqafuxFFOJfi2CZaJqPslJ2e1Mf24XEpSZrkULpzwoJh',
           },
         }
       );
       // Verifico si fue exitosa la captura
       if (response.data.status === "COMPLETED") {
-        dtaReserva.pagada = true;
-        await dtaReserva.save();
-        let dtaPasajero = await pasajeros_reserva.findAll({
-          where: {
-            id_reserva: {
-              [Op.eq]: dtaReserva.id
-            }
+        //dtaReserva.pagada = true;
+        //await dtaReserva.save();
+        
+       attachments: [
+          {
+            filename: 'mailtrap.png',
+            path: __dirname + '/mailtrap.png',
+            cid: 'uniq-mailtrap.png' 
           }
-        });
-
+        ]
         //Enviaremos la notificacion del pago
-        /*const emailResult = await sendEmail(
+        
+        sendEmailAttachments
+        const emailResult = await sendEmail(
           "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
           "Notificación de Pago",
           "Has realizado con éxito la compra del siguiente ticket :"
-        );*/
-
-        console.log("Correo enviado: ", emailResult);
-      }
+        );
+  
+        //console.log("Correo enviado: ", emailResult);
+      }*/
     } else {
       res.status(401).json({ message: "ruta no encontrada" })
     }
 
 
-    return res.redirect("http://localhost:3000/");
+    //res.redirect("http://localhost:3000/");
   } catch (error) {
     console.error(error);
-    return res.status(500).send("Something goes wrong");
+    res.status(500).send("Something goes wrong");
   }
 };
 
