@@ -16,18 +16,7 @@ const createOrder = async (req, res) => {
     if (body) {
       let dta_User = await usuarios.findOne({where:{id:{[Op.eq]:body.id_user}}});
       if(dta_User){
-        let dtaReserva = await reserva.findOne({
-          where:{
-            id_user:{
-              [Op.eq]:dta_User.id
-            },
-            id_statud: 1
-          }
-        });
-        if(!dtaReserva){
-          res.status(401).json({message: "usted posee una reserva activa"})
-        }else{
-          let dta_ruta = await rutas.findOne({where:{id:{[Op.eq]:body.id_ruta}}});
+        let dta_ruta = await rutas.findOne({where:{id:{[Op.eq]:body.id_ruta}}});
           if(dta_ruta){
             const order = {
               intent: "CAPTURE",
@@ -135,7 +124,6 @@ const createOrder = async (req, res) => {
           }else{
             res.status(401).json({message: "ruta no encontrada"})
           }
-        }
       }else{
         res.status(401).json({message: "usuario no encontrado"})
       }
