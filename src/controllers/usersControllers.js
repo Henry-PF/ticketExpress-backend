@@ -58,27 +58,10 @@ exports.create = async (data) => {
                     A continuación, encontrarás algunos detalles sobre tu cuenta:
                     </p>
                     <ul>
-                        <li>Nombre de usuario: ${dataUser.usuario}</li>
+                        <li>Nombre de usuario: ${dataUser.nick}</li>
                     </ul>
                     <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
                     <p>¡Esperamos que disfrutes de tu experiencia con TicketExpress!</p>`
-                );
-                result.data = user;
-                result.message = "Usuario registrado con éxito";
-                await sendEmail(
-                    dtaPersona.correo,
-                    "Bienvenido a TicketExpress ✔",
-                    "<h1>Bienvenido a SmartPay</h1>",
-                    `<p>Hola ${dtaPersona.nombre},</p>
-                        <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
-                    <p>
-                    A continuación, encontrarás algunos detalles sobre tu cuenta:
-                    </p>
-                    <ul>
-                        <li>Nombre de usuario: </li>
-                    </ul>
-                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
-                    <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
                 );
                 console.log(sendEmail);
             } else {
@@ -97,14 +80,47 @@ exports.create = async (data) => {
 
 
 exports.update = async (data) => {
-    let result = {};
     try {
+        const usuario = await usuarios.findOne(
+            { where: { id_datos: { [Op.eq]: data.id } } }
+        );
+        if (usuario) {
+            await usuarios.update({
+                id_statud: data.id_statud
+            }, {
+                where: { id: usuario.id }
+            });
 
+            const dato = await datos.findOne({
+                where: {
+                    id: {
+                        [Op.eq]: usuario.id_datos
+                    }
+                }
+            });
+            if (dato) {
+                await datos.update({
+                    nombre: data.nombre,
+                    apellido: data.apellido,
+                    correo: data.correo,
+                    direccion: data.direccion,
+                    telefono: data.telefono,
+                    dni: data.dni,
+                }, {
+                    where: { id: dato.id }
+                });
+            }
+
+            return { message: "Datos actualizados con éxito" };
+        } else {
+            return { error: "No se pudo encontrar la empresa" };
+        }
     } catch (error) {
-        result.error = error.message;
+        console.error(error);
+        return { error: error.message };
     }
-    return result;
 }
+
 exports.findAll = async () => {
     let result = {};
     try {
@@ -217,6 +233,7 @@ exports.Delete = async (id) => {
 }
 
 exports.findEmail = async (data) => {
+    console.log('EMAIL', data);
     let result = {};
     try {
         if (data.email) {
@@ -263,10 +280,10 @@ exports.forgoPassword = async (data) => {
             include: [
                 {
                     model: usuarios,
-                    attributes:['id','password'],
+                    attributes: ['id', 'password'],
                     where: {
-                        id_statud:{
-                            [Op.eq] : 1
+                        id_statud: {
+                            [Op.eq]: 1
                         }
                     }
                 }
@@ -284,7 +301,7 @@ exports.forgoPassword = async (data) => {
                 })
                 let updateDta = await usuarios.update({ password: hashF }, {
                     where: {
-                        id:{
+                        id: {
                             [Op.eq]: dta.usuarios[0].dataValues.id
                         }
                     }

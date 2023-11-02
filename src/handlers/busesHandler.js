@@ -3,7 +3,7 @@ const { create, getAll, deleteBus, getId, update } = require('../controllers/bus
 exports.createBus = async (req, res) => {
     let result = {};
     try {
-        result = await create(req);
+        result = await create(req.body);
         if (result) {
             res.status(200).json(result);
         }
@@ -53,7 +53,7 @@ exports.updateBus = async (req, res) => {
 exports.deleteBus = async (req, res) => {
     let result = {};
     try {
-        result = await deleteBus(req.body.id);
+        result = await deleteBus(req.params);
         if (result) {
             res.status(200).json(result);
         }

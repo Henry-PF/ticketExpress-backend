@@ -56,7 +56,7 @@ exports.updateEmpresa = async (req, res) => {
 exports.deleteEmpresa = async (req, res) => {
     let result = {};
     try {
-        result = await deleteEmpresa(req.body.id);
+        result = await deleteEmpresa(req.params);
         if (result) {
             return res.status(200).json(result);
         }

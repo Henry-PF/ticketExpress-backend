@@ -4,7 +4,7 @@ const { createEmpresa, findAll, deleteEmpresa, findId, updateEmpresa } = require
 
 router.get('/get', findAll);
 router.post('/create', createEmpresa);
-router.post('/delete/:id', deleteEmpresa);
+router.put('/delete/:id/:status', deleteEmpresa);
 router.post('/:id', findId);
 router.put('/update', updateEmpresa)
 
