@@ -7,7 +7,7 @@ const { Op } = require('sequelize');
 
 const GOOGLE_CLIENT_ID = '70581296445-v2s6fqgqf60dsp0p8vp7m5jopr332d01.apps.googleusercontent.com'
 const GOOGLE_CLIENT_SECRET = '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'
-const GOOGLE_CALLBACK_URL = 'http://localhost:3001/auth/callback'
+const GOOGLE_CALLBACK_URL = 'https://api-54nh.onrender.com/auth/callback'
 
 passport.use(
     new GoogleStrategy(
