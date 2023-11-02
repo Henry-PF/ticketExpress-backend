@@ -9,6 +9,10 @@ const {
   PAYPAL_API_SECRET,
 } = require("../config/config.js");
 
+let access_token ="";
+setAccess_token =(valor)=>{access_token=valor;}
+getAccess_token =()=>{return access_token}
+
 const createOrder = async (req, res) => {
   try {
     let body = req.body;
@@ -62,6 +66,7 @@ const createOrder = async (req, res) => {
                 },
               }
             );
+            setAccess_token(access_token);
             const response = await axios.post(
               `${PAYPAL_API}v2/checkout/orders`,
               order,
@@ -71,7 +76,7 @@ const createOrder = async (req, res) => {
                 },
               }
             );
-
+            
             let dtaPaypal=response.data;
 
             dtaReserva = await reserva.create({
@@ -191,9 +196,8 @@ const captureOrder = async (req, res) => {
         `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
         {},
         {
-          auth: {
-            username: PAYPAL_API_CLIENT,
-            password: PAYPAL_API_SECRET
+          headers: {
+            Authorization: `Bearer ${getAccess_token}`,
           },
         }
       );
@@ -275,7 +279,7 @@ const captureOrder = async (req, res) => {
     }
     
 
-    //res.redirect("http://localhost:3000/");
+    //res.redirect("https://ticketexpress.onrender.com");
   } catch (error) {
     console.error(error);
     res.status(500).send("Something goes wrong");
@@ -283,7 +287,7 @@ const captureOrder = async (req, res) => {
 };
 
 const cancelOrder = (req, res) => {
-  res.redirect("http://localhost:3000/");
+  res.redirect("https://ticketexpress.onrender.com");
 };
 
 module.exports = {
