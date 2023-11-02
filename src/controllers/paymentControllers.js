@@ -1,7 +1,7 @@
 const axios = require("axios");
-const { reserva,datos,pasajeros,boletos,rutas,buses_rutas,usuarios,pasajeros_reserva,rutas_empresa,empresas} = require('../db.js');
+const { reserva,datos,pasajeros,boletos,rutas,buses_rutas,usuarios,pasajeros_reserva,rutas_empresa,empresas,terminales,buses} = require('../db.js');
 const { Op } = require("sequelize");
-const {sendEmail, sendEmailAttachments} = require("../config/mailer.js");
+const {sendEmail} = require("../config/mailer.js");
 const {createBoletoPDF} = require("../public/index.js");
 const {
   PAYPAL_API,
@@ -68,8 +68,8 @@ const createOrder = async (req, res) => {
                   "Content-Type": "application/x-www-form-urlencoded",
                 },
                 auth: {
-                  username: 'Ab3fo1dJ3hyDSILpbaYvlRDLHO9bVZwV_0fg-Mv0BKGT8xcyd255nu_6IAC3KTx1ll9IIP--QjIJ2_pA',
-                  password: 'EI0uHYr_31_coCWAGIFpO6T4_zc86jM_EW_QlqafuxFFOJfi2CZaJqPslJ2e1Mf24XEpSZrkULpzwoJh',
+                  username: PAYPAL_API_CLIENT,
+                  password: PAYPAL_API_SECRET,
                 },
               }
             );
@@ -154,8 +154,15 @@ const captureOrder = async (req, res) => {
 
   try {
     let dtaReserva = await reserva.findOne({
-      attributes: { exclude: ['id','id_ruta','id_user','id_statud','usuarioId'] },
+      attributes: { exclude: ['id','id_ruta','id_statud','usuarioId'] },
       include:[
+        {
+          attributes: { exclude: ['id', 'id_statud'] },
+          model:usuarios,
+          include:[{
+            model:datos
+          }]
+        },
         {
           attributes: { exclude: ['id', 'id_statud'] },
           model:rutas,
@@ -192,63 +199,83 @@ const captureOrder = async (req, res) => {
       }
     });
     if(dtaReserva){
-      let dtaPasajero=dtaReserva.pasajeros_reservas;
-      let dtaBoletos=[]
-      dtaPasajero.forEach(async (element) => {
-        let dtaBoleto ={
-          id_ruta: dtaReserva.ruta.rutas_empresas[0].id_ruta,
-          id_statud: 1,
-          id_empresa: dtaReserva.ruta.rutas_empresas[0].id_empresa,
-          id_pasajero:element.pasajero.id,
-          costo: parseFloat(dtaReserva.precio) / dtaReserva.cantidadPasajeros,
-          fecha: new Date().toLocaleString()
-        }
-        let newBoleto =await boletos.create(dtaBoleto);
-        if(newBoleto){
-          await createBoletoPDF(element.pasajero.dato.dni,"<h1>hola</h1>");
-          // sendEmailAttachments(element.pasajero.dato.correo,"Boleto de bus","","",)
-        }
-        dtaBoletos.push(dtaBoleto)
-      })
-      
-      if (dtaReserva) {
-        res.json({"dtaReserva":dtaReserva,"dtaBoleto":dtaBoletos})
-      }
-
-      
-      /*const response = await axios.post(
+      const response = await axios.post(
         `${PAYPAL_API}v2/checkout/orders/${token}/capture`,
         {},
         {
           auth: {
-            username: 'Ab3fo1dJ3hyDSILpbaYvlRDLHO9bVZwV_0fg-Mv0BKGT8xcyd255nu_6IAC3KTx1ll9IIP--QjIJ2_pA',
-            password: 'EI0uHYr_31_coCWAGIFpO6T4_zc86jM_EW_QlqafuxFFOJfi2CZaJqPslJ2e1Mf24XEpSZrkULpzwoJh',
+            username: PAYPAL_API_CLIENT,
+            password: PAYPAL_API_SECRET
           },
         }
       );
-      // Verifico si fue exitosa la captura
+
+      let dtaPasajero=dtaReserva.pasajeros_reservas;
+      let dtaOrigen = await terminales.findOne({where:{id:{[Op.eq]:dtaReserva.ruta.origen}}});
+      let dtaDestino = await terminales.findOne({where:{id:{[Op.eq]:dtaReserva.ruta.destino}}});
+      let dtabus = await buses_rutas.findOne({
+        include:[{
+          attributes: { exclude: ['id','capacidad','id_statud'] },
+          model:buses
+        }],
+        where:{id_ruta:{[Op.eq]:dtaReserva.ruta.rutas_empresas[0].id_ruta}}
+      })
       if (response.data.status === "COMPLETED") {
-        //dtaReserva.pagada = true;
-        //await dtaReserva.save();
+        dtaReserva.pagada = true;
+        await dtaReserva.save();
         
-       attachments: [
-          {
-            filename: 'mailtrap.png',
-            path: __dirname + '/mailtrap.png',
-            cid: 'uniq-mailtrap.png' 
+        dtaPasajero.forEach(async (element) => {
+          let dtaBoleto ={
+            id_ruta: dtaReserva.ruta.rutas_empresas[0].id_ruta,
+            id_statud: 1,
+            id_empresa: dtaReserva.ruta.rutas_empresas[0].id_empresa,
+            id_pasajero:element.pasajero.id,
+            costo: parseFloat(dtaReserva.precio) / dtaReserva.cantidadPasajeros,
+            fecha: new Date().toLocaleString()
           }
-        ]
+          let newBoleto =await boletos.create(dtaBoleto);
+          
+          if(newBoleto){
+            let datosPDf ={
+              "pasajero":{
+                "nombre": element.pasajero.dato.nombre,
+                "apellido": element.pasajero.dato.apellido,
+                "dni": element.pasajero.dato.dni,
+                "direccion": element.pasajero.dato.direccion,
+                "telefono": element.pasajero.dato.telefono,
+                "correo": element.pasajero.dato.correo
+              },
+              "ruta":{
+                "origen": dtaOrigen.nombre,
+                "destino": dtaDestino.nombre,
+                "fecha": dtaReserva.ruta.fecha_salida,
+                "precio": dtaReserva.ruta.precio,
+                "hora_salida": dtaReserva.ruta.hora_salida,
+              },
+              "bus":{
+                "modelo":dtabus.bus.modelo,
+                "marca":dtabus.bus.marca,
+                "placa":dtabus.bus.placa
+              },            
+              "empresa":{
+                "logoEmpresa": dtaReserva.ruta.rutas_empresas[0].empresa.url_logo,
+                "nombre": dtaReserva.ruta.rutas_empresas[0].empresa.dato.nombre,
+                "cuit": dtaReserva.ruta.rutas_empresas[0].empresa.dato.cuit,
+                "direccion": dtaReserva.ruta.rutas_empresas[0].empresa.dato.direccion,
+                "telefono": dtaReserva.ruta.rutas_empresas[0].empresa.dato.telefono
+              }
+            }
+            await createBoletoPDF(element.pasajero.dato.dni,datosPDf); 
+          }
+        })
         //Enviaremos la notificacion del pago
-        
-        sendEmailAttachments
-        const emailResult = await sendEmail(
-          "tucorreo@gmail.com", // Cambia por la dirección de correo a la que deseas enviar la notificación
+        await sendEmail(
+          dtaReserva.usuario.dato.correo, // Cambia por la dirección de correo a la que deseas enviar la notificación
           "Notificación de Pago",
-          "Has realizado con éxito la compra del siguiente ticket :"
+          "Su pago se a realizado con éxito"
         );
-  
-        //console.log("Correo enviado: ", emailResult);
-      }*/
+      }
+      res.json(response.data)
     }else{
       res.status(401).json({message: "ruta no encontrada"})
     }
