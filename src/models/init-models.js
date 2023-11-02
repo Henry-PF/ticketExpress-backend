@@ -144,6 +144,9 @@ function initModels(sequelize) {
   
   pasajeros_reserva.belongsTo(reserva,{foreignKey:"id_reserva"})
   reserva.hasMany(pasajeros_reserva,{foreignKey:"id_reserva"})
+
+  reserva.belongsTo(rutas,{foreignKey:"id_ruta"})
+  rutas.hasMany(reserva,{foreignKey:"id_ruta"})
   
   pasajeros_reserva.belongsTo(pasajeros,{foreignKey:"id_pasajero"})
   pasajeros.hasMany(pasajeros_reserva,{foreignKey:"id_pasajero"})
