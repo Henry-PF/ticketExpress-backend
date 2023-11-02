@@ -1,15 +1,37 @@
-const { empresas } = require("../db");
+const { empresas,datos } = require("../db");
 const { Op } = require("sequelize");
-
+const {cloudinary} = require("../config/cloudinary");
 exports.create = async (data) => {
     try {
-        const newEmpresa = await empresas.create({
-            id_datos: data.id_datos,
-            id_statud: data.id_statud
+        let imgs = data.files;
+        Object.keys(imgs).forEach((img) => {
+            const extension = imgs[img].mimetype.split("/")[1];
+            const validExtensions = ["png", "jpg", "jpeg"];
+            if (!validExtensions.includes(extension)) {
+                return res.status(400).send("extesion de archivos no valida");
+            }
         })
-
+        const imglogo = await cloudinary.v2.uploader.upload(imgs["logo"].tempFilePath);
+        const datosEmpresas = datos.create({
+            nombre: data.nombre,
+            direccion: data.direccion,
+            telefono: data.telefono,
+            correo: data.correo,
+            cuit: data.cuit,
+            url_logo: imglogo.secure_url
+        });
+        if(datosEmpresas){
+            const newEmpresa = await empresas.create({
+                id_datos: datosEmpresas.id,
+                id_statud: "1"
+            })
+            if(newEmpresa){
+                return { message: "empresa creada con éxito" };
+            }else{
+                return { error: "No se pudo crear la empresa" };
+            }
+        }
         return newEmpresa;
-
     } catch (error) {
         return console.log({ "error": error.message });
     }

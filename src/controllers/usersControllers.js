@@ -3,13 +3,17 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const sendEmail = require('../config/mailer');
+const process = require("process");
+const env = process.env
+
 
 exports.create = async (data) => {
     let result = {};
     let dataUser = data.body;
+
     try {
         if (dataUser.data) {
-            let dta = JSON.parse(dataUser.data);
+            let dta = dataUser.data;
             let dtaPersona = {
                 nombre: dta.nombre,
                 apellido: dta.apellido,
@@ -20,11 +24,11 @@ exports.create = async (data) => {
                 telefono: dta.telefono,
                 googleId: dta.googleId
             }
-            let hashF = await bcrypt.hash(dta.password, 10).then(hash => {
+            let hashF = await bcrypt.hash(dataUser.password, 10).then(hash => {
                 return hash;
             })
             let dtaUsuario = {
-                nick: dta.nick,
+                nick: dataUser.nick,
                 password: hashF,
                 id_statud: "1",
                 type: "usuario",
@@ -44,22 +48,39 @@ exports.create = async (data) => {
             if (user) {
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
-                // await sendEmail(
-                //     "Bienvenido a SmartPay ✔",
-                //     "<h1>Bienvenido a SmartPay</h1>",
-                //     `<p>Hola ${dtaPersona.nombre},</p>
-                //         <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
-                //     <p>
-                //     A continuación, encontrarás algunos detalles sobre tu cuenta:
-                //     </p>
-                //     <ul>
-                //         <li>Nombre de usuario: ${dataUser.usuario}</li>
-                //     </ul>
-                //     <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
-                //     <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
-                // );
+                await sendEmail(
+                    dta.correo,
+                    "Bienvenido a TicketExpress ✔",
+                    "<h1>Bienvenido a TicketExpress</h1>",
+                    `<p>Hola ${dtaPersona.nombre},</p>
+                        <p>Gracias por registrarte en TicketExpress, tu sitio web de compra de boleto mas seguro de argentina.</p>
+                    <p>
+                    A continuación, encontrarás algunos detalles sobre tu cuenta:
+                    </p>
+                    <ul>
+                        <li>Nombre de usuario: ${dataUser.usuario}</li>
+                    </ul>
+                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
+                    <p>¡Esperamos que disfrutes de tu experiencia con TicketExpress!</p>`
+                );
                 result.data = user;
                 result.message = "Usuario registrado con éxito";
+                await sendEmail(
+                    dtaPersona.correo,
+                    "Bienvenido a TicketExpress ✔",
+                    "<h1>Bienvenido a SmartPay</h1>",
+                    `<p>Hola ${dtaPersona.nombre},</p>
+                        <p>Gracias por registrarte en SmartPay, tu billetera virtual. Estamos emocionados de tenerte como parte de nuestra comunidad.</p>
+                    <p>
+                    A continuación, encontrarás algunos detalles sobre tu cuenta:
+                    </p>
+                    <ul>
+                        <li>Nombre de usuario: </li>
+                    </ul>
+                    <p>¡Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte!</p>
+                    <p>¡Esperamos que disfrutes de tu experiencia con SmartPay!</p>`
+                );
+                console.log(sendEmail);
             } else {
                 throw new Error("Error al intentar registrar el usuario");
             }
@@ -68,7 +89,6 @@ exports.create = async (data) => {
             throw new Error("Error faltan datos para proceder con el registro");
         }
     } catch (error) {
-        console.log(error.message);
         result.error = error.message;
     }
     console.log(result);
@@ -144,13 +164,11 @@ exports.login = async (data) => {
                 }
             }
         }).then((dta) => {
-            console.log('2', dta.usuarios[0]);
             if (dta) {
                 if (!bcrypt.compareSync(data.password, dta.usuarios[0].password)) {
                     throw new Error('Contraseña incorrecta');
                 } else {
-                    const secretKey = "mZ1IWqsOvcTD31fPsDLig8TZ7v8nkTTB";
-                    const token = jwt.sign({ userId: dta.usuarios[0].nick.id }, secretKey, {
+                    const token = jwt.sign({ userId: dta.usuarios[0].nick.id }, env.SECRECT_TOKEN, {
                         expiresIn: "1h",
                     });
                     result.data = dta;
@@ -160,7 +178,6 @@ exports.login = async (data) => {
                 result.error = "Usuario no registrado";
             }
         });
-
     } catch (error) {
         console.log(error)
         result.error = error.message;
@@ -205,7 +222,7 @@ exports.findEmail = async (data) => {
         if (data.email) {
             let dataUser = await datos.findOne({
                 where: {
-                    correo_electronico: {
+                    correo: {
                         [Op.eq]: data.email
                     }
                 },
@@ -223,6 +240,72 @@ exports.findEmail = async (data) => {
                 message: "falta el campo email"
             };
         }
+    } catch (error) {
+        console.log(error)
+        result.error = error.message;
+    }
+    return result;
+}
+
+const generarString = (longitud) => {
+    let result = "";
+    const abc = "a b c d e f g h i j k l m n o p q r s t u v w x y z".split(" "); // Espacios para convertir cara letra a un elemento de un array
+    for (i = 0; i <= longitud; i++) {
+        const random = Math.floor(Math.random() * abc.length);
+        result += abc[random]
+    }
+    return result;
+};
+exports.forgoPassword = async (data) => {
+    let result = {};
+    try {
+        await datos.findOne({
+            include: [
+                {
+                    model: usuarios,
+                    attributes:['id','password'],
+                    where: {
+                        id_statud:{
+                            [Op.eq] : 1
+                        }
+                    }
+                }
+            ],
+            where: {
+                correo: {
+                    [Op.eq]: data.correo
+                }
+            }
+        }).then(async (dta) => {
+            if (dta) {
+                let newPass = generarString(8);
+                let hashF = await bcrypt.hash(newPass, 10).then(hash => {
+                    return hash;
+                })
+                let updateDta = await usuarios.update({ password: hashF }, {
+                    where: {
+                        id:{
+                            [Op.eq]: dta.usuarios[0].dataValues.id
+                        }
+                    }
+                });
+                if (updateDta) {
+
+                    await sendEmail(
+                        dta.correo,
+                        "TicketExpress",
+                        "<h1>Recuperacion de contraseña</h1>",
+                        `<p>Hola ${dta.nombre} ${dta.apellido},</p>
+                            <p>Su nueva contraseña es: ${newPass}.</p>
+                        <p>`
+                    );
+                }
+                result.message = "Operacion Realizada con exito";
+            } else {
+                result.error = "Usuario no registrado";
+            }
+        });
+
     } catch (error) {
         console.log(error)
         result.error = error.message;

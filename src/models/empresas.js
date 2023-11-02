@@ -23,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'statud',
         key: 'id'
       }
+    },
+    url_logo:{
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
     sequelize,
