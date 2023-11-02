@@ -134,8 +134,8 @@ function initModels(sequelize) {
   terminales.hasMany(rutas, { foreignKey: "destino" });
   rutas.belongsTo(terminales, { foreignKey: "origen" });
   terminales.hasMany(rutas, { foreignKey: "origen" });
-  usuarios.hasMany(reserva, { foreignKey: "usuarioId" });
-  reserva.belongsTo(usuarios, { foreignKey: "usuarioId" });
+  usuarios.hasMany(reserva, { foreignKey: "id_user" });
+  reserva.belongsTo(usuarios, { foreignKey: "id_user" });
   usuarios.hasMany(review, { foreignKey: "id_user" });
   review.belongsTo(usuarios, { foreignKey: "id_user" });
 

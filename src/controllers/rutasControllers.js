@@ -1,9 +1,10 @@
-const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa } = require("../db");
+const { ciudades, provincias, rutas, rutas_empresa, terminales, empresa, buses_rutas } = require("../db");
 const { Op } = require("sequelize");
 
 exports.create = async (req, res) => {
     let result = {};
     let datos = req;
+    console.log(datos);
     try {
         let dataTerminalO = await terminales.findOne({
             where: {
@@ -46,7 +47,7 @@ exports.create = async (req, res) => {
                 }
                 let newRuta = await rutas.create(DatanewRuta);
                 if (newRuta) {
-                    //await rutas_empresa.create({"id_ruta":newRuta.id,"id_empresa":dataEmpresa.id});
+                    await buses_rutas.create({ "id_ruta": newRuta.id, "id_bus": datos.bus, "capacidad_disponible": datos.capacidad });
                     result.data = newRuta;
                     result.message = "Ruta registrado con éxito";
                 } else {
