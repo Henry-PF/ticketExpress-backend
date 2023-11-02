@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { reserva, datos, pasajeros, boletos, rutas, buses_rutas, usuarios, pasajeros_reserva, rutas_empresa, empresas, terminales, buses } = require('../db.js');
+const { reserva, datos, pasajeros, boletos, pago_boletos, rutas, buses_rutas, usuarios, pasajeros_reserva, rutas_empresa, empresas, terminales, buses } = require('../db.js');
 const { Op } = require("sequelize");
 const { sendEmail } = require("../config/mailer.js");
 const { createBoletoPDF } = require("../public/index.js");
@@ -66,9 +66,7 @@ const createOrder = async (req, res) => {
               },
             }
           );
-
           setAccess_token(access_token);
-
           const response = await axios.post(
             `${PAYPAL_API}v2/checkout/orders`,
             order,
@@ -231,6 +229,12 @@ const captureOrder = async (req, res) => {
           let newBoleto = await boletos.create(dtaBoleto);
 
           if (newBoleto) {
+            await pago_boletos.create({
+              id_boleto: newBoleto.id,
+              tipo: "simple",
+              fecha: new Date().toLocaleString(),
+              ref: token
+            });
             let datosPDf = {
               "pasajero": {
                 "nombre": element.pasajero.dato.nombre,
@@ -276,7 +280,7 @@ const captureOrder = async (req, res) => {
     }
 
 
-    //res.redirect("http://localhost:3000/");
+    //res.redirect("https://ticketexpress.onrender.com");
   } catch (error) {
     console.error(error);
     res.status(500).send("Something goes wrong");
@@ -284,7 +288,7 @@ const captureOrder = async (req, res) => {
 };
 
 const cancelOrder = (req, res) => {
-  res.redirect("http://localhost:3000/");
+  res.redirect("https://ticketexpress.onrender.com");
 };
 
 module.exports = {

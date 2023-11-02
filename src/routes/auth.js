@@ -14,7 +14,7 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/log
     function (req, res) {
         const user = req.user;
         res.cookie('userData', JSON.stringify(user));
-        res.redirect('http://localhost:3000');
+        res.redirect('https://ticketexpress.onrender.com');
     }
 );
 
